@@ -25,6 +25,7 @@
             .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 50; transform: translateX(-100%); }
             .sidebar.show { transform: translateX(0); }
             .cart-mobile { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #e5e7eb; z-index: 30; }
+            main { margin-bottom: 5rem; }
         }
         .menu-item { display: flex; align-items: center; padding: 0.75rem 1rem; cursor: pointer; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s; }
         .menu-item:hover { background-color: rgba(255, 255, 255, 0.1); }
@@ -115,8 +116,8 @@
         </main>
     </div>
 
-    <!-- Mobile Cart - Shows items in modal -->
-    <div class="cart-mobile p-4 shadow-lg">
+    <!-- Mobile Cart - Shows items in modal (Mobile only) -->
+    <div class="cart-mobile p-4 shadow-lg md:hidden">
         <button id="view-cart-btn" class="w-full bg-primary-blue text-white py-3 rounded-lg font-bold mb-2 flex justify-between items-center px-4">
             <span>View Cart (<span id="cart-count">0</span>)</span>
             <span id="cart-total-mobile" class="text-xl font-bold">Rp 0</span>
