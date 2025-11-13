@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Employees - KopiAku POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1c0cdc',
+                        'accent-coffee': '#6f4e37',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { width: 280px; background-color: #1c0cdc; color: white; transition: transform 0.3s; position: relative; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 50; transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+        }
+        .menu-item { display: flex; align-items: center; padding: 0.75rem 1rem; cursor: pointer; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s; }
+        .menu-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .menu-item.active { background-color: rgba(255, 255, 255, 0.2); font-weight: 600; }
+        .tab-button { padding: 0.75rem 1.5rem; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; }
+        .tab-button.active { border-bottom-color: #1c0cdc; color: #1c0cdc; font-weight: 600; }
+        .photo-verification-badge { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-white border-b z-40 flex items-center justify-between p-4">
+        <button id="menu-toggle" class="p-2 rounded-lg text-primary-blue">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-xl font-bold">Manage Employees</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="p-6"><h1 class="text-2xl font-bold">Kopi<span class="text-accent-coffee">Aku</span></h1></div>
+            <nav class="p-4 pb-24">
+                <a href="dashboard.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-10l2-2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dashboard</span></a>
+                <a href="cashier.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Cashier</span></a>
+                <a href="stock.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg><span>Stock Management</span></a>
+                <a href="recipes.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Coffee Recipes</span></a>
+                <a href="transaction.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>QRIS Transactions</span></a>
+                <a href="employee.html" class="menu-item active"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10h.01M13 16h2v2h-2zm4-6h.01M19 13h-6a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-6a2 2 0 00-2-2zm-9-1a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><span>Employees</span></a>
+            </nav>
+            <div class="absolute bottom-0 w-full p-4 border-t border-white/20 bg-gradient-to-t from-black/20 to-transparent">
+                <button id="logout-btn" class="w-full flex items-center justify-center p-3 rounded-lg bg-red-500 hover:bg-red-600 active:bg-red-700 transition-all duration-200 font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mt-16 md:mt-0">
+            <h2 class="text-3xl font-bold mb-6">Manage Employees</h2>
+
+            <!-- Tab Navigation -->
+            <div class="flex border-b mb-6 overflow-x-auto">
+                <button class="tab-button active" data-tab="employees">Employees</button>
+                <button class="tab-button" data-tab="shifts">Current Shifts</button>
+                <button class="tab-button" data-tab="history">Shift History</button>
+            </div>
+
+            <!-- Employees Tab -->
+            <div id="employees-tab" class="tab-content">
+                <div class="mb-4">
+                    <button id="add-employee-btn" class="bg-primary-blue text-white py-2 px-4 rounded-lg font-bold hover:bg-opacity-90 shadow-md">Add Employee</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="employees-grid"></div>
+            </div>
+
+            <!-- Shifts Tab -->
+            <div id="shifts-tab" class="tab-content hidden">
+                <div class="mb-4">
+                    <button id="add-shift-btn" class="bg-primary-blue text-white py-2 px-4 rounded-lg font-bold hover:bg-opacity-90 shadow-md">Assign Shift</button>
+                </div>
+                <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="py-4 px-6 text-left font-semibold">Employee</th>
+                                <th class="py-4 px-6 text-left font-semibold">Date</th>
+                                <th class="py-4 px-6 text-left font-semibold">Time</th>
+                                <th class="py-4 px-6 text-left font-semibold">Status</th>
+                                <th class="py-4 px-6 text-center font-semibold">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shifts-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="history-tab" class="tab-content hidden">
+                <div class="mb-4">
+                    <input type="text" id="history-search" placeholder="Search employee or date..." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                </div>
+                <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="py-4 px-6 text-left font-semibold">Employee</th>
+                                <th class="py-4 px-6 text-left font-semibold">Date</th>
+                                <th class="py-4 px-6 text-left font-semibold">Time</th>
+                                <th class="py-4 px-6 text-left font-semibold">Status</th>
+                                <th class="py-4 px-6 text-left font-semibold">Photo Verification</th>
+                                <th class="py-4 px-6 text-center font-semibold">View Photo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div id="employee-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full my-8">
+            <h3 class="text-2xl font-bold mb-4">Add Employee</h3>
+            <form id="employee-form" class="space-y-4">
+                <input type="hidden" id="employee-id">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Employee Name</label>
+                    <input type="text" id="employee-name" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Position</label>
+                    <select id="employee-position" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                        <option value="">Select Position</option>
+                        <option value="Barista">Barista</option>
+                        <option value="Cashier">Cashier</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Cleaning Staff">Cleaning Staff</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Phone Number</label>
+                    <input type="tel" id="employee-phone" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                </div>
+                <div class="flex space-x-3">
+                    <button type="submit" class="flex-1 bg-primary-blue text-white py-3 rounded-lg font-bold hover:bg-opacity-90">Save Employee</button>
+                    <button type="button" id="cancel-employee-btn" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-300">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Shift Modal -->
+    <div id="shift-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full my-8">
+            <h3 class="text-2xl font-bold mb-4">Assign Shift</h3>
+            <form id="shift-form" class="space-y-4">
+                <input type="hidden" id="shift-id">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Employee</label>
+                    <select id="shift-employee" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                        <option value="">Select Employee</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Date</label>
+                    <input type="date" id="shift-date" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Time Slot</label>
+                    <select id="shift-time" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                        <option value="">Select Time</option>
+                        <option value="06:00 - 14:00">06:00 - 14:00 (Morning)</option>
+                        <option value="14:00 - 22:00">14:00 - 22:00 (Afternoon)</option>
+                        <option value="22:00 - 06:00">22:00 - 06:00 (Night)</option>
+                    </select>
+                </div>
+                <div class="flex space-x-3">
+                    <button type="submit" class="flex-1 bg-primary-blue text-white py-3 rounded-lg font-bold hover:bg-opacity-90">Save Shift</button>
+                    <button type="button" id="cancel-shift-btn" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-300">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Photo Verification Modal -->
+    <div id="photo-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl p-6 max-w-2xl w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Photo Verification</h3>
+                <button id="close-photo-modal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div id="photo-content" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium mb-2">Employee Photo</p>
+                        <img id="employee-photo" src="" alt="Employee Photo" class="w-full rounded-lg border">
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium mb-2">Verification Status</p>
+                        <div id="verification-status" class="p-4 rounded-lg text-center font-semibold"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm font-medium mb-2">Details</p>
+                    <div id="photo-details" class="bg-gray-50 p-4 rounded-lg space-y-2 text-sm"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize localStorage data
+        let employees = JSON.parse(localStorage.getItem('employees')) || {};
+        let shifts = JSON.parse(localStorage.getItem('shifts')) || {};
+        let shiftHistory = JSON.parse(localStorage.getItem('shiftHistory')) || [];
+
+        // Sample data for demonstration
+        if (Object.keys(employees).length === 0) {
+            employees = {
+                'emp1': { name: 'Budi Santoso', position: 'Barista', phone: '081234567890', photoVerified: true, photoUrl: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%231c0cdc%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 font-size=%2240%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22%3EBS%3C/text%3E%3C/svg%3E' },
+                'emp2': { name: 'Siti Nurhaliza', position: 'Cashier', phone: '082345678901', photoVerified: false, photoUrl: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%226f4e37%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 font-size=%2240%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESN%3C/text%3E%3C/svg%3E' },
+                'emp3': { name: 'Ahmad Rahman', position: 'Barista', phone: '083456789012', photoVerified: true, photoUrl: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%231c0cdc%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 font-size=%2240%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22%3EAR%3C/text%3E%3C/svg%3E' }
+            };
+            localStorage.setItem('employees', JSON.stringify(employees));
+        }
+
+        if (Object.keys(shifts).length === 0) {
+            shifts = {
+                'shift1': { employeeId: 'emp1', employeeName: 'Budi Santoso', date: '2025-11-14', time: '06:00 - 14:00', status: 'Assigned' },
+                'shift2': { employeeId: 'emp2', employeeName: 'Siti Nurhaliza', date: '2025-11-14', time: '14:00 - 22:00', status: 'Assigned' }
+            };
+            localStorage.setItem('shifts', JSON.stringify(shifts));
+        }
+
+        if (shiftHistory.length === 0) {
+            shiftHistory = [
+                { employeeId: 'emp1', employeeName: 'Budi Santoso', date: '2025-11-13', time: '06:00 - 14:00', status: 'Completed', photoVerified: true },
+                { employeeId: 'emp2', employeeName: 'Siti Nurhaliza', date: '2025-11-12', time: '14:00 - 22:00', status: 'Completed', photoVerified: false },
+                { employeeId: 'emp3', employeeName: 'Ahmad Rahman', date: '2025-11-13', time: '14:00 - 22:00', status: 'Completed', photoVerified: true }
+            ];
+            localStorage.setItem('shiftHistory', JSON.stringify(shiftHistory));
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.dataset.tab;
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                button.classList.add('active');
+                document.getElementById(`${tab}-tab`).classList.remove('hidden');
+                if (tab === 'shifts') renderShifts();
+                if (tab === 'history') renderHistory();
+            });
+        });
+
+        function renderEmployees() {
+            const grid = document.getElementById('employees-grid');
+            grid.innerHTML = '';
+            Object.entries(employees).forEach(([id, emp]) => {
+                const statusBadge = emp.photoVerified ? '✓' : '✗';
+                const statusColor = emp.photoVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+                grid.innerHTML += `
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold">${emp.name}</h3>
+                                <p class="text-sm text-gray-600">${emp.position}</p>
+                            </div>
+                            <div class="photo-verification-badge ${statusColor}">${statusBadge}</div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">📱 ${emp.phone}</p>
+                        <div class="flex space-x-2">
+                            <button onclick="editEmployee('${id}')" class="flex-1 bg-primary-blue text-white py-2 rounded-lg hover:bg-opacity-90 text-sm font-semibold">Edit</button>
+                            <button onclick="deleteEmployee('${id}')" class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-opacity-90 text-sm font-semibold">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderShifts() {
+            const table = document.getElementById('shifts-table');
+            table.innerHTML = '';
+            Object.entries(shifts).forEach(([id, shift]) => {
+                const statusColor = shift.status === 'Assigned' ? 'text-blue-600' : 'text-green-600';
+                table.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-4 px-6">${shift.employeeName}</td>
+                        <td class="py-4 px-6">${shift.date}</td>
+                        <td class="py-4 px-6">${shift.time}</td>
+                        <td class="py-4 px-6"><span class="${statusColor} font-semibold">${shift.status}</span></td>
+                        <td class="py-4 px-6 text-center">
+                            <button onclick="editShift('${id}')" class="text-primary-blue hover:underline mr-3">Edit</button>
+                            <button onclick="deleteShift('${id}')" class="text-red-500 hover:underline">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderHistory() {
+            const table = document.getElementById('history-table');
+            table.innerHTML = '';
+            shiftHistory.forEach((record, index) => {
+                const statusColor = record.photoVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+                const statusBadge = record.photoVerified ? '✓ Verified' : '⚠ Pending';
+                table.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-4 px-6">${record.employeeName}</td>
+                        <td class="py-4 px-6">${record.date}</td>
+                        <td class="py-4 px-6">${record.time}</td>
+                        <td class="py-4 px-6"><span class="text-green-600 font-semibold">${record.status}</span></td>
+                        <td class="py-4 px-6"><span class="px-3 py-1 rounded-full text-sm font-semibold ${statusColor}">${statusBadge}</span></td>
+                        <td class="py-4 px-6 text-center">
+                            <button onclick="viewPhoto(${index})" class="text-primary-blue hover:underline font-semibold">View</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function saveEmployees() {
+            localStorage.setItem('employees', JSON.stringify(employees));
+        }
+
+        function saveShifts() {
+            localStorage.setItem('shifts', JSON.stringify(shifts));
+        }
+
+        function saveShiftHistory() {
+            localStorage.setItem('shiftHistory', JSON.stringify(shiftHistory));
+        }
+
+        document.getElementById('add-employee-btn').addEventListener('click', () => {
+            document.getElementById('employee-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancel-employee-btn').addEventListener('click', () => {
+            document.getElementById('employee-modal').classList.add('hidden');
+        });
+
+        document.getElementById('employee-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('employee-id').value || 'emp' + Date.now();
+            employees[id] = {
+                name: document.getElementById('employee-name').value,
+                position: document.getElementById('employee-position').value,
+                phone: document.getElementById('employee-phone').value,
+                photoVerified: false,
+                photoUrl: `data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%231c0cdc%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 font-size=%2240%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22%3E${document.getElementById('employee-name').value.split(' ').map(n => n[0]).join('')}%3C/text%3E%3C/svg%3E`
+            };
+            saveEmployees();
+            renderEmployees();
+            updateShiftDropdown();
+            document.getElementById('employee-modal').classList.add('hidden');
+            document.getElementById('employee-form').reset();
+        });
+
+        document.getElementById('add-shift-btn').addEventListener('click', () => {
+            document.getElementById('shift-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancel-shift-btn').addEventListener('click', () => {
+            document.getElementById('shift-modal').classList.add('hidden');
+        });
+
+        document.getElementById('shift-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('shift-id').value || 'shift' + Date.now();
+            const empId = document.getElementById('shift-employee').value;
+            const empName = employees[empId]?.name || '';
+            shifts[id] = {
+                employeeId: empId,
+                employeeName: empName,
+                date: document.getElementById('shift-date').value,
+                time: document.getElementById('shift-time').value,
+                status: 'Assigned'
+            };
+            saveShifts();
+            renderShifts();
+            document.getElementById('shift-modal').classList.add('hidden');
+            document.getElementById('shift-form').reset();
+        });
+
+        document.getElementById('close-photo-modal').addEventListener('click', () => {
+            document.getElementById('photo-modal').classList.add('hidden');
+        });
+
+        function editEmployee(id) {
+            const emp = employees[id];
+            document.getElementById('employee-id').value = id;
+            document.getElementById('employee-name').value = emp.name;
+            document.getElementById('employee-position').value = emp.position;
+            document.getElementById('employee-phone').value = emp.phone;
+            document.getElementById('employee-modal').classList.remove('hidden');
+        }
+
+        function deleteEmployee(id) {
+            if (confirm('Delete this employee?')) {
+                delete employees[id];
+                saveEmployees();
+                renderEmployees();
+                updateShiftDropdown();
+            }
+        }
+
+        function editShift(id) {
+            const shift = shifts[id];
+            document.getElementById('shift-id').value = id;
+            document.getElementById('shift-employee').value = shift.employeeId;
+            document.getElementById('shift-date').value = shift.date;
+            document.getElementById('shift-time').value = shift.time;
+            document.getElementById('shift-modal').classList.remove('hidden');
+        }
+
+        function deleteShift(id) {
+            if (confirm('Delete this shift?')) {
+                delete shifts[id];
+                saveShifts();
+                renderShifts();
+            }
+        }
+
+        function viewPhoto(index) {
+            const record = shiftHistory[index];
+            const emp = employees[record.employeeId];
+            document.getElementById('employee-photo').src = emp?.photoUrl || '';
+            document.getElementById('verification-status').innerHTML = record.photoVerified ? 
+                '<span class="bg-green-100 text-green-700 px-4 py-2 rounded-lg">✓ Verified</span>' :
+                '<span class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg">⚠ Pending Verification</span>';
+            document.getElementById('photo-details').innerHTML = `
+                <p><strong>Employee:</strong> ${record.employeeName}</p>
+                <p><strong>Date:</strong> ${record.date}</p>
+                <p><strong>Shift:</strong> ${record.time}</p>
+                <p><strong>Status:</strong> ${record.status}</p>
+            `;
+            document.getElementById('photo-modal').classList.remove('hidden');
+        }
+
+        function updateShiftDropdown() {
+            const select = document.getElementById('shift-employee');
+            select.innerHTML = '<option value="">Select Employee</option>';
+            Object.entries(employees).forEach(([id, emp]) => {
+                select.innerHTML += `<option value="${id}">${emp.name}</option>`;
+            });
+        }
+
+        document.getElementById('menu-toggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Initial render
+        renderEmployees();
+        updateShiftDropdown();
+    </script>
+</body>
+</html>
