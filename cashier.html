@@ -55,6 +55,23 @@
         }
         .swipe-handle:active { cursor: grabbing; }
         .swipe-text { position: relative; z-index: 1; pointer-events: none; color: #6b7280; font-weight: bold; }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receipt-content, #receipt-content * {
+                visibility: visible;
+            }
+            #receipt-content {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: white;
+                border: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -145,6 +162,53 @@
                     </div>
                     <div class="swipe-text flex items-center justify-center h-full">Swipe to Pay →</div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receipt-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-8">
+            <div class="text-center mb-6">
+                <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h2 class="text-2xl font-bold text-gray-900">Payment Successful!</h2>
+                <p class="text-gray-600 mt-2">Transaction completed successfully</p>
+            </div>
+
+            <!-- Receipt Content -->
+            <div id="receipt-content" class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+                <div class="text-center border-b pb-4 mb-4">
+                    <h3 class="font-bold text-lg">KopiAku</h3>
+                    <p class="text-sm text-gray-600">Receipt</p>
+                    <p id="receipt-date" class="text-xs text-gray-500 mt-2"></p>
+                </div>
+
+                <div id="receipt-items" class="mb-4 space-y-2 text-sm">
+                    <!-- Receipt items will be populated here -->
+                </div>
+
+                <div class="border-t pt-4">
+                    <div class="flex justify-between font-bold text-lg">
+                        <span>Total:</span>
+                        <span id="receipt-total" class="text-primary-blue">Rp 0</span>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 text-xs text-gray-600">
+                    <p>Thank you for your purchase!</p>
+                    <p id="receipt-id" class="font-mono text-xs mt-2"></p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+                <button id="print-receipt-btn" class="flex-1 bg-primary-blue text-white py-3 rounded-lg font-bold hover:bg-opacity-90 transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Print Receipt
+                </button>
+                <button id="close-receipt-btn" class="flex-1 bg-gray-300 text-gray-900 py-3 rounded-lg font-bold hover:bg-gray-400 transition-colors">
+                    Done
+                </button>
             </div>
         </div>
     </div>
@@ -254,10 +318,54 @@
             });
             
             localStorage.setItem('stock', JSON.stringify(stock));
-            alert('Payment successful! Stock updated.');
+            
+            // Show receipt modal
+            showReceipt();
+            
+            // Clear cart and close cart modal
             cart = [];
             updateCart();
             document.getElementById('cart-modal').classList.add('hidden');
+        }
+
+        function showReceipt() {
+            const receiptModal = document.getElementById('receipt-modal');
+            const receiptItems = document.getElementById('receipt-items');
+            const receiptTotal = document.getElementById('receipt-total');
+            const receiptDate = document.getElementById('receipt-date');
+            const receiptId = document.getElementById('receipt-id');
+            
+            // Calculate total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Generate receipt ID
+            const transactionId = 'TRX-' + Date.now();
+            
+            // Format date
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Populate receipt items
+            receiptItems.innerHTML = cart.map(item => `
+                <div class="flex justify-between">
+                    <span>${item.name} x${item.quantity}</span>
+                    <span>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+                </div>
+            `).join('');
+            
+            // Update totals and info
+            receiptTotal.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            receiptDate.textContent = dateStr;
+            receiptId.textContent = transactionId;
+            
+            // Show modal
+            receiptModal.classList.remove('hidden');
         }
 
         // Desktop checkout button
@@ -322,6 +430,14 @@
 
         document.getElementById('close-cart').addEventListener('click', () => {
             document.getElementById('cart-modal').classList.add('hidden');
+        });
+
+        document.getElementById('print-receipt-btn').addEventListener('click', () => {
+            window.print();
+        });
+
+        document.getElementById('close-receipt-btn').addEventListener('click', () => {
+            document.getElementById('receipt-modal').classList.add('hidden');
         });
 
         window.addToCart = addToCart;
