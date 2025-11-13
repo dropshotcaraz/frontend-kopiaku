@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRIS Transactions - KopiAku POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1c0cdc',
+                        'accent-coffee': '#6f4e37',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { width: 280px; background-color: #1c0cdc; color: white; transition: transform 0.3s; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 50; transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+        }
+        .menu-item { display: flex; align-items: center; padding: 0.75rem 1rem; cursor: pointer; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s; }
+        .menu-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .menu-item.active { background-color: rgba(255, 255, 255, 0.2); font-weight: 600; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-white border-b z-40 flex items-center justify-between p-4">
+        <button id="menu-toggle" class="p-2 rounded-lg text-primary-blue">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-xl font-bold">Stock Management</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="p-6"><h1 class="text-2xl font-bold">Kopi<span class="text-accent-coffee">Aku</span></h1></div>
+            <nav class="p-4">
+                <a href="dashboard.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-10l2-2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dashboard</span></a>
+                <a href="cashier.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Cashier</span></a>
+                <a href="stock.html" class="menu-item active"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg><span>Stock Management</span></a>
+                <a href="recipes.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Coffee Recipes</span></a>
+                <a href="transactions.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>QRIS Transactions</span></a>
+            </nav>
+        </aside>
+
+        <!-- Halaman QRIS & GoPay -->
+            <div id="page-qris-gopay" class="page-content hidden">
+                <h2 class="text-3xl font-bold mb-6 text-gray-900">Integrasi QRIS & GoPay</h2>
+                <div class="card mb-6 shadow-custom">
+                    <p class="mb-4 text-gray-700">Untuk mengunggah data transaksi dari GoPay Merchant, silakan pilih file CSV.</p>
+                    <input type="file" id="gopay-csv-upload" accept=".csv" class="mb-4 border p-2 rounded-lg focus:outline-none focus:ring-primary-blue">
+                    <button id="upload-csv-btn" class="bg-primary-blue text-white py-2 px-4 rounded-lg font-bold hover:bg-opacity-90 transition-colors shadow-md">Unggah & Proses</button>
+                    <div id="upload-status" class="mt-4 text-green-600 font-semibold hidden">File berhasil diunggah!</div>
+                </div>
+                <div class="card shadow-custom">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-900">Riwayat Transaksi GoPay</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left table-auto">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Tanggal</th>
+                                    <th class="py-3 px-6 text-left">ID Transaksi</th>
+                                    <th class="py-3 px-6 text-left">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gopay-transactions-body" class="text-gray-600 text-sm font-light">
+                                <!-- Transaction data will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            // --- QRIS & GoPay Page ---
+            const renderGoPayTransactions = () => {
+                const gopayTransactionsBody = document.getElementById('gopay-transactions-body');
+                gopayTransactionsBody.innerHTML = '';
+                if (gopayTransactions.length === 0) {
+                     gopayTransactionsBody.innerHTML = '<tr class="border-b border-gray-200"><td colspan="3" class="py-3 px-6 text-center text-gray-400">Belum ada data transaksi.</td></tr>';
+                } else {
+                    gopayTransactions.forEach((transaction, index) => {
+                        const row = document.createElement('tr');
+                        row.className = `border-b border-gray-200 transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`;
+                        row.innerHTML = `
+                            <td class="py-3 px-6">${transaction.date}</td>
+                            <td class="py-3 px-6">${transaction.id}</td>
+                            <td class="py-3 px-6">Rp ${transaction.amount.toLocaleString('id-ID')}</td>
+                        `;
+                        gopayTransactionsBody.appendChild(row);
+                    });
+                }
+            };
+
+            document.getElementById('upload-csv-btn').addEventListener('click', () => {
+                const fileInput = document.getElementById('gopay-csv-upload');
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const csvData = event.target.result;
+                        processCSV(csvData);
+                        document.getElementById('upload-status').classList.remove('hidden');
+                        showModal(`
+                            <h3 class="text-xl font-bold mb-4 text-gray-900">Unggah Sukses</h3>
+                            <p class="mb-4 text-gray-700">Data transaksi GoPay berhasil diimpor.</p>
+                            <div class="flex justify-end">
+                                <button id="modal-close-btn" class="bg-primary-blue text-white py-2 px-4 rounded-lg font-bold hover:bg-opacity-90 transition-colors shadow-md">Tutup</button>
+                            </div>
+                        `);
+                    };
+                    reader.readAsText(file);
+                } else {
+                    showModal(`
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">Peringatan</h3>
+                        <p class="mb-4 text-gray-700">Silakan pilih file CSV terlebih dahulu.</p>
+                        <div class="flex justify-end">
+                            <button id="modal-close-btn" class="bg-primary-blue text-white py-2 px-4 rounded-lg font-bold hover:bg-opacity-90 transition-colors shadow-md">Tutup</button>
+                        </div>
+                    `);
+                }
+            });
+
+            const processCSV = (csv) => {
+                const lines = csv.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                gopayTransactions = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    if (values.length === headers.length) {
+                        const transaction = {
+                            date: values[headers.indexOf('Tanggal')],
+                            id: values[headers.indexOf('ID Transaksi')],
+                            amount: parseInt(values[headers.indexOf('Jumlah')].replace(/\./g, '').replace('Rp ', ''), 10),
+                        };
+                        gopayTransactions.push(transaction);
+                    }
+                }
+                renderGoPayTransactions();
+            };
+
+
+            // Initial page render and event listeners
+            renderPage('page-dashboard');
+            renderProducts();
+            renderCart();
+            renderStock();
+            renderShifts();
+            renderGoPayTransactions();
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = `page-${link.dataset.page}`;
+                    renderPage(pageId);
+                });
+            });
+
+        });
+    </script>
+
+</body>
