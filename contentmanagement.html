@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management - KopiAku</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#2a1bed',
+                        'coffee': '#6f4e37',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-primary text-white shadow-lg">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold">Kopi<span class="text-yellow-300">Aku</span></h1>
+                <p class="text-sm text-gray-300 mt-2">Content Management</p>
+            </div>
+            <nav class="p-4 space-y-2">
+                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg bg-opacity-20 bg-white" data-section="hero">
+                    <span class="font-semibold">Hero Section</span>
+                </button>
+                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="about">
+                    <span class="font-semibold">Tentang Kami</span>
+                </button>
+                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="menu">
+                    <span class="font-semibold">Menu</span>
+                </button>
+                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="promo">
+                    <span class="font-semibold">Promosi</span>
+                </button>
+                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="location">
+                    <span class="font-semibold">Lokasi & Kontak</span>
+                </button>
+                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="carousel">
+                    <span class="font-semibold">Carousel Images</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <div class="max-w-5xl">
+                <h2 class="text-4xl font-bold text-gray-900 mb-8">Kelola Konten Landing Page</h2>
+
+                <!-- Hero Section -->
+                <section id="hero" class="section-content bg-white p-8 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary">Hero Section</h3>
+                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="hero">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Judul Hero</label>
+                            <input type="text" id="hero-title" class="input input-bordered w-full" placeholder="Kopi Berkualitas, Harga Bersahabat.">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi Hero</label>
+                            <textarea id="hero-desc" class="textarea textarea-bordered w-full h-24" placeholder="Kami percaya setiap orang berhak menikmati secangkir kopi yang baik..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Background Image URL</label>
+                            <input type="text" id="hero-bg" class="input input-bordered w-full" placeholder="URL gambar background">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- About Section -->
+                <section id="about" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary">Tentang Kami</h3>
+                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="about">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Story Section -->
+                        <div class="border-t pt-6">
+                            <h4 class="text-lg font-bold text-gray-900 mb-4">Kisah Kopi Aku</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Paragraf 1</label>
+                                    <textarea id="about-story-1" class="textarea textarea-bordered w-full h-20"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Paragraf 2</label>
+                                    <textarea id="about-story-2" class="textarea textarea-bordered w-full h-20"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vision -->
+                        <div class="border-t pt-6">
+                            <h4 class="text-lg font-bold text-gray-900 mb-4">Visi Kami</h4>
+                            <textarea id="about-vision" class="textarea textarea-bordered w-full h-20"></textarea>
+                        </div>
+
+                        <!-- Mission -->
+                        <div class="border-t pt-6">
+                            <h4 class="text-lg font-bold text-gray-900 mb-4">Misi Kami</h4>
+                            <div id="mission-items" class="space-y-2">
+                                <!-- Mission items will be added here -->
+                            </div>
+                            <button class="mt-4 btn btn-sm btn-outline" id="add-mission">+ Tambah Misi</button>
+                        </div>
+
+                        <!-- Origin -->
+                        <div class="border-t pt-6">
+                            <h4 class="text-lg font-bold text-gray-900 mb-4">Awal Mula</h4>
+                            <textarea id="about-origin" class="textarea textarea-bordered w-full h-20"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Menu Section -->
+                <section id="menu" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary">Menu</h3>
+                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="menu">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+
+                    <div id="menu-categories" class="space-y-6">
+                        <!-- Menu categories will be populated here -->
+                    </div>
+                    <button class="mt-6 btn btn-primary" id="add-category">+ Tambah Kategori Menu</button>
+                </section>
+
+                <!-- Promo Section -->
+                <section id="promo" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary">Promosi Spesial</h3>
+                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="promo">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Judul Promosi</label>
+                            <input type="text" id="promo-title" class="input input-bordered w-full" placeholder="Promosi Spesial Untukmu!">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Daftar Aturan Promosi</label>
+                            <div id="promo-rules" class="space-y-3">
+                                <!-- Promo rules will be populated here -->
+                            </div>
+                            <button class="mt-4 btn btn-sm btn-outline" id="add-rule">+ Tambah Aturan</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Location & Contact Section -->
+                <section id="location" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary">Lokasi & Kontak</h3>
+                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="location">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Jam Operasional</label>
+                            <input type="text" id="location-hours" class="input input-bordered w-full" placeholder="20:00 - 02:00 WIB">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat</label>
+                            <textarea id="location-address" class="textarea textarea-bordered w-full h-20"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor WhatsApp</label>
+                            <input type="text" id="location-phone" class="input input-bordered w-full" placeholder="6287814811610">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Instagram Handle</label>
+                            <input type="text" id="location-instagram" class="input input-bordered w-full" placeholder="@kopiakuu">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Google Maps Embed URL</label>
+                            <textarea id="location-map" class="textarea textarea-bordered w-full h-20"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Carousel Images Section -->
+                <section id="carousel" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary">Gambar Carousel</h3>
+                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="carousel">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+
+                    <div id="carousel-images" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Carousel images will be populated here -->
+                    </div>
+                    <button class="mt-6 btn btn-primary" id="add-carousel-image">+ Tambah Gambar</button>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize with sample data
+        const contentData = JSON.parse(localStorage.getItem('landingContent')) || {
+            hero: {
+                title: 'Kopi Berkualitas, Harga Bersahabat.',
+                desc: 'Kami percaya setiap orang berhak menikmati secangkir kopi yang baik tanpa harus menguras dompet. Temukan semangatmu di setiap tegukan.',
+                bg: 'https://images.unsplash.com/photo-1559496417-e7f25cb247f3?q=80&w=3456&auto=format&fit=crop'
+            },
+            about: {
+                story: [
+                    'Kopi Aku lahir dari kecintaan mendalam terhadap kopi dan keresahan akan tingginya harga kopi di sekitar kampus. Kehadiran kami bertujuan untuk mengubah pandangan bahwa kualitas selalu identik dengan harga tinggi.',
+                    'Kami ingin membuktikan bahwa kopi berkualitas dapat dinikmati oleh siapa saja.'
+                ],
+                vision: 'Menjadi merek kopi pilihan mahasiswa dan masyarakat luas dengan menyajikan kopi berkualitas tinggi yang mudah diakses dan terjangkau.',
+                mission: ['Menyajikan kualitas unggul', 'Menciptakan pengalaman berkesan', 'Berinovasi tanpa henti', 'Menjadi bagian dari gaya hidup'],
+                origin: 'Perjalanan Kopi Aku dimulai dari tempat yang sederhana di atas kendaraan, di sekitar kampus, hingga di booth kecil di berbagai acara. Dengan semangat yang sama sejak awal, kami terus berkomitmen untuk menyajikan kopi terbaik bagi semua pecinta kopi.'
+            },
+            menu: [
+                {
+                    category: 'REFRESHMENT DRINK',
+                    items: [
+                        { name: 'Espresso', price: 8000 },
+                        { name: 'Americano', price: 12000 }
+                    ]
+                }
+            ],
+            promo: {
+                title: 'Promosi Spesial Untukmu!',
+                rules: [
+                    'Temukan booth KOPI AKU di sekitarmu',
+                    'Ajak minimal 2 temanmu untuk beli KOPI AKU bareng',
+                    'Follow Instagram @kopiakuu dan tunjukkan ke kasir',
+                    'Langsung dapetin kopimu dengan SETENGAH HARGA'
+                ]
+            },
+            location: {
+                hours: '11:00 - 22:00 WIB',
+                address: 'JJl. Belimbing, RT.02/RW.05, Tegal Gundil, Kec. Bogor Utara, Kota Bogor, Jawa Barat 16152',
+                phone: '6287814811610',
+                instagram: '@kopiakuu',
+                map: 'https://www.google.com/maps/embed?pb=...'
+            },
+            carousel: [
+                { url: 'https://image2url.com/images/1761188402746-8047f73e-0b1e-4312-aeb5-bb1917613a72.png', alt: 'Kopi Pilihan' },
+                { url: 'https://image2url.com/images/1761189286834-fb6a6ade-7443-4940-a223-94d3c82ad870.png', alt: 'Penggilingan' }
+            ]
+        };
+
+        // Load content
+        function loadContent() {
+            // Hero
+            document.getElementById('hero-title').value = contentData.hero.title;
+            document.getElementById('hero-desc').value = contentData.hero.desc;
+            document.getElementById('hero-bg').value = contentData.hero.bg;
+
+            // About
+            document.getElementById('about-story-1').value = contentData.about.story[0];
+            document.getElementById('about-story-2').value = contentData.about.story[1];
+            document.getElementById('about-vision').value = contentData.about.vision;
+            document.getElementById('about-origin').value = contentData.about.origin;
+
+            // Mission items
+            const missionContainer = document.getElementById('mission-items');
+            missionContainer.innerHTML = contentData.about.mission.map((mission, idx) => `
+                <div class="flex gap-2">
+                    <input type="text" class="input input-bordered flex-1" value="${mission}" data-mission="${idx}">
+                    <button class="btn btn-sm btn-error" onclick="removeMission(${idx})">Hapus</button>
+                </div>
+            `).join('');
+
+            // Menu
+            const menuContainer = document.getElementById('menu-categories');
+            menuContainer.innerHTML = contentData.menu.map((cat, idx) => `
+                <div class="border rounded-lg p-4">
+                    <div class="flex justify-between mb-3">
+                        <input type="text" class="input input-bordered flex-1 mr-2" value="${cat.category}" data-category="${idx}" placeholder="Nama Kategori">
+                        <button class="btn btn-sm btn-error" onclick="removeCategory(${idx})">Hapus</button>
+                    </div>
+                    <div class="space-y-2 ml-4" id="items-${idx}">
+                        ${cat.items.map((item, itemIdx) => `
+                            <div class="flex gap-2">
+                                <input type="text" class="input input-bordered flex-1" value="${item.name}" placeholder="Nama Item" data-item-name="${idx}-${itemIdx}">
+                                <input type="number" class="input input-bordered w-24" value="${item.price}" placeholder="Harga" data-item-price="${idx}-${itemIdx}">
+                                <button class="btn btn-sm btn-error" onclick="removeMenuItem(${idx}, ${itemIdx})">Hapus</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="mt-2 btn btn-sm btn-outline" onclick="addMenuItem(${idx})">+ Tambah Item</button>
+                </div>
+            `).join('');
+
+            // Promo
+            document.getElementById('promo-title').value = contentData.promo.title;
+            const rulesContainer = document.getElementById('promo-rules');
+            rulesContainer.innerHTML = contentData.promo.rules.map((rule, idx) => `
+                <div class="flex gap-2">
+                    <input type="text" class="input input-bordered flex-1" value="${rule}" data-rule="${idx}">
+                    <button class="btn btn-sm btn-error" onclick="removeRule(${idx})">Hapus</button>
+                </div>
+            `).join('');
+
+            // Location
+            document.getElementById('location-hours').value = contentData.location.hours;
+            document.getElementById('location-address').value = contentData.location.address;
+            document.getElementById('location-phone').value = contentData.location.phone;
+            document.getElementById('location-instagram').value = contentData.location.instagram;
+            document.getElementById('location-map').value = contentData.location.map;
+
+            // Carousel
+            const carouselContainer = document.getElementById('carousel-images');
+            carouselContainer.innerHTML = contentData.carousel.map((img, idx) => `
+                <div class="border rounded-lg p-4">
+                    <img src="${img.url}" alt="${img.alt}" class="w-full h-48 object-cover rounded mb-3">
+                    <input type="text" class="input input-bordered w-full mb-2" value="${img.url}" placeholder="Image URL" data-carousel-url="${idx}">
+                    <input type="text" class="input input-bordered w-full mb-2" value="${img.alt}" placeholder="Alt Text" data-carousel-alt="${idx}">
+                    <button class="btn btn-sm btn-error w-full" onclick="removeCarousel(${idx})">Hapus Gambar</button>
+                </div>
+            `).join('');
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const section = btn.getAttribute('data-section');
+                document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
+                document.getElementById(section).classList.remove('hidden');
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('bg-opacity-20', 'bg-white'));
+                btn.classList.add('bg-opacity-20', 'bg-white');
+            });
+        });
+
+        // Save functions
+        document.querySelectorAll('.save-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-target');
+                saveContent(target);
+            });
+        });
+
+        function saveContent(section) {
+            if (section === 'hero') {
+                contentData.hero = {
+                    title: document.getElementById('hero-title').value,
+                    desc: document.getElementById('hero-desc').value,
+                    bg: document.getElementById('hero-bg').value
+                };
+            } else if (section === 'about') {
+                contentData.about.story[0] = document.getElementById('about-story-1').value;
+                contentData.about.story[1] = document.getElementById('about-story-2').value;
+                contentData.about.vision = document.getElementById('about-vision').value;
+                contentData.about.origin = document.getElementById('about-origin').value;
+                contentData.about.mission = Array.from(document.querySelectorAll('[data-mission]')).map(el => el.value);
+            } else if (section === 'menu') {
+                contentData.menu = contentData.menu.map((cat, idx) => {
+                    const categoryName = document.querySelector(`[data-category="${idx}"]`)?.value || cat.category;
+                    return {
+                        category: categoryName,
+                        items: cat.items
+                    };
+                });
+            } else if (section === 'promo') {
+                contentData.promo.title = document.getElementById('promo-title').value;
+                contentData.promo.rules = Array.from(document.querySelectorAll('[data-rule]')).map(el => el.value);
+            } else if (section === 'location') {
+                contentData.location = {
+                    hours: document.getElementById('location-hours').value,
+                    address: document.getElementById('location-address').value,
+                    phone: document.getElementById('location-phone').value,
+                    instagram: document.getElementById('location-instagram').value,
+                    map: document.getElementById('location-map').value
+                };
+            } else if (section === 'carousel') {
+                contentData.carousel = Array.from(document.querySelectorAll('[data-carousel-url]')).map((el, idx) => ({
+                    url: el.value,
+                    alt: document.querySelector(`[data-carousel-alt="${idx}"]`)?.value || ''
+                }));
+            }
+
+            localStorage.setItem('landingContent', JSON.stringify(contentData));
+            alert('Konten berhasil disimpan!');
+        }
+
+        // Add/Remove functions
+        function addMission() {
+            contentData.about.mission.push('Misi baru');
+            loadContent();
+        }
+
+        function removeMission(idx) {
+            contentData.about.mission.splice(idx, 1);
+            loadContent();
+        }
+
+        function addCategory() {
+            contentData.menu.push({ category: 'Kategori Baru', items: [] });
+            loadContent();
+        }
+
+        function removeCategory(idx) {
+            contentData.menu.splice(idx, 1);
+            loadContent();
+        }
+
+        function addMenuItem(categoryIdx) {
+            contentData.menu[categoryIdx].items.push({ name: 'Item Baru', price: 0 });
+            loadContent();
+        }
+
+        function removeMenuItem(catIdx, itemIdx) {
+            contentData.menu[catIdx].items.splice(itemIdx, 1);
+            loadContent();
+        }
+
+        function addRule() {
+            contentData.promo.rules.push('Aturan baru');
+            loadContent();
+        }
+
+        function removeRule(idx) {
+            contentData.promo.rules.splice(idx, 1);
+            loadContent();
+        }
+
+        function addCarouselImage() {
+            contentData.carousel.push({ url: '', alt: 'Gambar Baru' });
+            loadContent();
+        }
+
+        function removeCarousel(idx) {
+            contentData.carousel.splice(idx, 1);
+            loadContent();
+        }
+
+        document.getElementById('add-mission').addEventListener('click', addMission);
+        document.getElementById('add-category').addEventListener('click', addCategory);
+        document.getElementById('add-rule').addEventListener('click', addRule);
+        document.getElementById('add-carousel-image').addEventListener('click', addCarouselImage);
+
+        // Initial load
+        loadContent();
+    </script>
+</body>
+</html>
