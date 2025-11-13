@@ -109,11 +109,11 @@
     <script>
         // Check if user is logged in
         const employeeId = localStorage.getItem('employeeId');
-        const needsVerification = localStorage.getItem('needsPhotoVerification');
+        // const needsVerification = localStorage.getItem('needsPhotoVerification');
 
-        if (!employeeId || needsVerification !== 'true') {
-            window.location.href = 'login.html';
-        }
+        // if (!employeeId || needsVerification !== 'true') {
+        //     window.location.href = 'login.html';
+        // }
 
         // Display employee ID
         document.getElementById('employee-name').textContent = employeeId;
