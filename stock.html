@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management - KopiAku POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1c0cdc',
+                        'accent-coffee': '#6f4e37',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { width: 280px; background-color: #1c0cdc; color: white; transition: transform 0.3s; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 50; transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+        }
+        .menu-item { display: flex; align-items: center; padding: 0.75rem 1rem; cursor: pointer; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s; }
+        .menu-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .menu-item.active { background-color: rgba(255, 255, 255, 0.2); font-weight: 600; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-white border-b z-40 flex items-center justify-between p-4">
+        <button id="menu-toggle" class="p-2 rounded-lg text-primary-blue">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-xl font-bold">Stock Management</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="p-6"><h1 class="text-2xl font-bold">Kopi<span class="text-accent-coffee">Aku</span></h1></div>
+            <nav class="p-4">
+                <a href="dashboard.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-10l2-2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dashboard</span></a>
+                <a href="cashier.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Cashier</span></a>
+                <a href="stock.html" class="menu-item active"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg><span>Stock Management</span></a>
+                <a href="recipes.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Coffee Recipes</span></a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mt-16 md:mt-0">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <h2 class="text-3xl font-bold mb-4 md:mb-0">Stock Management</h2>
+                <div class="flex space-x-3">
+                    <button id="add-stock-btn" class="bg-primary-blue text-white py-2 px-4 rounded-lg font-bold hover:bg-opacity-90 shadow-md">Add Ingredient</button>
+                    <button id="export-csv-btn" class="bg-accent-coffee text-white py-2 px-4 rounded-lg font-bold hover:bg-opacity-90 shadow-md">Export CSV</button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="py-4 px-6 text-left font-semibold">Ingredient</th>
+                            <th class="py-4 px-6 text-left font-semibold">Current Stock</th>
+                            <th class="py-4 px-6 text-left font-semibold">Unit</th>
+                            <th class="py-4 px-6 text-left font-semibold">Status</th>
+                            <th class="py-4 px-6 text-center font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stock-table"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full">
+            <h3 class="text-2xl font-bold mb-4" id="modal-title">Add Ingredient</h3>
+            <form id="stock-form" class="space-y-4">
+                <input type="hidden" id="ingredient-id">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Ingredient Name</label>
+                    <input type="text" id="ingredient-name" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Quantity</label>
+                    <input type="number" id="ingredient-quantity" required step="0.01" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Unit</label>
+                    <select id="ingredient-unit" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                        <option value="g">Grams (g)</option>
+                        <option value="ml">Milliliters (ml)</option>
+                        <option value="L">Liters (L)</option>
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="pcs">Pieces (pcs)</option>
+                    </select>
+                </div>
+                <div class="flex space-x-3">
+                    <button type="submit" class="flex-1 bg-primary-blue text-white py-3 rounded-lg font-bold hover:bg-opacity-90">Save</button>
+                    <button type="button" id="cancel-btn" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-300">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize stock with common coffee ingredients
+        let stock = JSON.parse(localStorage.getItem('stock')) || {
+            'Coffee Beans': { quantity: 5000, unit: 'g' },
+            'Milk': { quantity: 10, unit: 'L' },
+            'Sugar': { quantity: 2000, unit: 'g' },
+            'Water': { quantity: 20, unit: 'L' },
+            'Chocolate': { quantity: 1000, unit: 'g' },
+            'Vanilla Syrup': { quantity: 500, unit: 'ml' },
+            'Caramel Syrup': { quantity: 500, unit: 'ml' }
+        };
+
+        function saveStock() {
+            localStorage.setItem('stock', JSON.stringify(stock));
+        }
+
+        function getStatus(quantity) {
+            if (quantity <= 0) return { text: 'Out of Stock', color: 'text-red-600 bg-red-100' };
+            if (quantity < 500) return { text: 'Low Stock', color: 'text-yellow-600 bg-yellow-100' };
+            return { text: 'In Stock', color: 'text-green-600 bg-green-100' };
+        }
+
+        function renderStock() {
+            const table = document.getElementById('stock-table');
+            table.innerHTML = Object.entries(stock).map(([name, data], i) => {
+                const status = getStatus(data.quantity);
+                return `
+                    <tr class="border-b hover:bg-gray-50 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+                        <td class="py-4 px-6 font-medium">${name}</td>
+                        <td class="py-4 px-6">${data.quantity.toLocaleString()}</td>
+                        <td class="py-4 px-6">${data.unit}</td>
+                        <td class="py-4 px-6">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold ${status.color}">${status.text}</span>
+                        </td>
+                        <td class="py-4 px-6 text-center">
+                            <button onclick="editStock('${name}')" class="text-primary-blue hover:underline font-semibold mr-3">Edit</button>
+                            <button onclick="deleteStock('${name}')" class="text-red-600 hover:underline font-semibold">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function showModal(ingredient = null) {
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal-title').textContent = ingredient ? 'Edit Ingredient' : 'Add Ingredient';
+            
+            if (ingredient) {
+                document.getElementById('ingredient-id').value = ingredient;
+                document.getElementById('ingredient-name').value = ingredient;
+                document.getElementById('ingredient-quantity').value = stock[ingredient].quantity;
+                document.getElementById('ingredient-unit').value = stock[ingredient].unit;
+            } else {
+                document.getElementById('stock-form').reset();
+                document.getElementById('ingredient-id').value = '';
+            }
+        }
+
+        function hideModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        window.editStock = (name) => showModal(name);
+
+        window.deleteStock = (name) => {
+            if (confirm(`Delete ${name}?`)) {
+                delete stock[name];
+                saveStock();
+                renderStock();
+            }
+        };
+
+        document.getElementById('add-stock-btn').addEventListener('click', () => showModal());
+        document.getElementById('cancel-btn').addEventListener('click', hideModal);
+
+        document.getElementById('stock-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('ingredient-id').value;
+            const name = document.getElementById('ingredient-name').value;
+            const quantity = parseFloat(document.getElementById('ingredient-quantity').value);
+            const unit = document.getElementById('ingredient-unit').value;
+
+            if (id && id !== name) {
+                delete stock[id];
+            }
+
+            stock[name] = { quantity, unit };
+            saveStock();
+            renderStock();
+            hideModal();
+        });
+
+        document.getElementById('export-csv-btn').addEventListener('click', () => {
+            let csv = 'Ingredient,Quantity,Unit,Status\n';
+            Object.entries(stock).forEach(([name, data]) => {
+                const status = getStatus(data.quantity).text;
+                csv += `${name},${data.quantity},${data.unit},${status}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stock_data.csv';
+            a.click();
+        });
+
+        document.getElementById('menu-toggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        renderStock();
+
+        // Check authentication and photo verification
+        if (!localStorage.getItem('employeeId')) {
+            window.location.href = 'login.html';
+        } else if (localStorage.getItem('needsPhotoVerification') === 'true') {
+            window.location.href = 'photo-verification.html';
+        }
+    </script>
+</body>
+</html>

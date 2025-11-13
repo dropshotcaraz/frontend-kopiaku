@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier - KopiAku POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1c0cdc',
+                        'accent-coffee': '#6f4e37',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { width: 280px; background-color: #1c0cdc; color: white; transition: transform 0.3s; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 50; transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .cart-mobile { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #e5e7eb; z-index: 30; }
+        }
+        .menu-item { display: flex; align-items: center; padding: 0.75rem 1rem; cursor: pointer; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s; }
+        .menu-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .menu-item.active { background-color: rgba(255, 255, 255, 0.2); font-weight: 600; }
+        
+        .swipe-button {
+            position: relative;
+            background: linear-gradient(to right, #1c0cdc 0%, #1c0cdc 50%, #e5e7eb 50%, #e5e7eb 100%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+            transition: background-position 0.3s;
+        }
+        .swipe-handle {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 50px;
+            height: calc(100% - 8px);
+            background: white;
+            border-radius: 0.5rem;
+            cursor: grab;
+            transition: left 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .swipe-handle:active { cursor: grabbing; }
+        .swipe-text { position: relative; z-index: 1; pointer-events: none; color: #6b7280; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-white border-b z-40 flex items-center justify-between p-4">
+        <button id="menu-toggle" class="p-2 rounded-lg text-primary-blue">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-xl font-bold">Cashier</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="p-6"><h1 class="text-2xl font-bold">Kopi<span class="text-accent-coffee">Aku</span></h1></div>
+            <nav class="p-4">
+                <a href="dashboard.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-10l2-2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dashboard</span></a>
+                <a href="cashier.html" class="menu-item active"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Cashier</span></a>
+                <a href="stock.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg><span>Stock Management</span></a>
+                <a href="recipes.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Coffee Recipes</span></a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mt-16 md:mt-0 mb-32 md:mb-0">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold mb-4">Cashier</h2>
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Search products..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                    <svg class="w-5 h-5 absolute left-3 top-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="product-list"></div>
+        </main>
+    </div>
+
+    <!-- Mobile Cart -->
+    <div class="cart-mobile p-4 shadow-lg">
+        <div class="flex justify-between items-center mb-3">
+            <span class="font-semibold">Total:</span>
+            <span id="cart-total-mobile" class="text-2xl font-bold text-primary-blue">Rp 0</span>
+        </div>
+        <button id="view-cart-btn" class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-bold mb-2">
+            View Cart (<span id="cart-count">0</span>)
+        </button>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center">
+        <div class="bg-white w-full md:max-w-lg md:rounded-t-2xl rounded-t-2xl md:rounded-2xl p-6 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Shopping Cart</h3>
+                <button id="close-cart" class="p-2 hover:bg-gray-100 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="cart-items" class="mb-4 space-y-3"></div>
+            <div class="border-t pt-4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span id="cart-total" class="text-2xl font-bold text-primary-blue">Rp 0</span>
+                </div>
+                <div class="relative h-14 bg-gray-200 rounded-lg overflow-hidden swipe-button" id="swipe-button">
+                    <div class="swipe-handle" id="swipe-handle">
+                        <svg class="w-6 h-6 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="swipe-text flex items-center justify-center h-full">Swipe to Pay →</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        const products = JSON.parse(localStorage.getItem('products')) || [
+            { id: 1, name: 'Americano', price: 25000, recipe: 'americano' },
+            { id: 2, name: 'Latte', price: 30000, recipe: 'latte' },
+            { id: 3, name: 'Cappuccino', price: 32000, recipe: 'cappuccino' },
+            { id: 4, name: 'Espresso', price: 20000, recipe: 'espresso' },
+            { id: 5, name: 'Mocha', price: 35000, recipe: 'mocha' },
+            { id: 6, name: 'Croissant', price: 18000, recipe: null },
+        ];
+
+        const recipes = JSON.parse(localStorage.getItem('recipes')) || {
+            'americano': { 'Coffee Beans': 18, 'Water': 120 },
+            'latte': { 'Coffee Beans': 18, 'Milk': 200, 'Water': 30 },
+            'cappuccino': { 'Coffee Beans': 18, 'Milk': 150, 'Water': 30 },
+            'espresso': { 'Coffee Beans': 18, 'Water': 30 },
+            'mocha': { 'Coffee Beans': 18, 'Milk': 180, 'Chocolate': 20, 'Water': 30 }
+        };
+
+        function renderProducts(filter = '') {
+            const list = document.getElementById('product-list');
+            const filtered = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+            list.innerHTML = filtered.map(p => `
+                <div class="bg-white p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow" onclick="addToCart(${p.id})">
+                    <div class="bg-gradient-to-br from-accent-coffee to-primary-blue h-32 rounded-lg mb-3"></div>
+                    <h4 class="font-bold text-sm mb-1">${p.name}</h4>
+                    <p class="text-primary-blue font-semibold">Rp ${p.price.toLocaleString('id-ID')}</p>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cart-total').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('cart-total-mobile').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const items = document.getElementById('cart-items');
+            items.innerHTML = cart.length ? cart.map(item => `
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <div>
+                        <h4 class="font-semibold">${item.name}</h4>
+                        <p class="text-sm text-gray-600">${item.quantity} x Rp ${item.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="changeQuantity(${item.id}, -1)" class="w-8 h-8 bg-gray-200 rounded-full">-</button>
+                        <span class="font-bold">${item.quantity}</span>
+                        <button onclick="changeQuantity(${item.id}, 1)" class="w-8 h-8 bg-primary-blue text-white rounded-full">+</button>
+                    </div>
+                </div>
+            `).join('') : '<p class="text-center text-gray-400">Cart is empty</p>';
+        }
+
+        function changeQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+                updateCart();
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert('Cart is empty');
+            
+            const stock = JSON.parse(localStorage.getItem('stock')) || {};
+            cart.forEach(item => {
+                if (item.recipe && recipes[item.recipe]) {
+                    Object.entries(recipes[item.recipe]).forEach(([ingredient, amount]) => {
+                        stock[ingredient] = (stock[ingredient] || 0) - (amount * item.quantity);
+                    });
+                }
+            });
+            
+            localStorage.setItem('stock', JSON.stringify(stock));
+            alert('Payment successful! Stock updated.');
+            cart = [];
+            updateCart();
+            document.getElementById('cart-modal').classList.add('hidden');
+        }
+
+        // Swipe to pay logic
+        const swipeButton = document.getElementById('swipe-button');
+        const swipeHandle = document.getElementById('swipe-handle');
+        let isDragging = false;
+        let startX = 0;
+
+        swipeHandle.addEventListener('mousedown', startDrag);
+        swipeHandle.addEventListener('touchstart', startDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const diff = currentX - startX;
+            const maxDiff = swipeButton.offsetWidth - swipeHandle.offsetWidth - 8;
+            const newLeft = Math.max(4, Math.min(diff + 4, maxDiff));
+            swipeHandle.style.left = `${newLeft}px`;
+            
+            const progress = (newLeft - 4) / (maxDiff - 4);
+            swipeButton.style.backgroundPosition = `${100 - (progress * 100)}% 0`;
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            const maxDiff = swipeButton.offsetWidth - swipeHandle.offsetWidth - 8;
+            const currentLeft = parseInt(swipeHandle.style.left || '4');
+            
+            if (currentLeft >= maxDiff * 0.8) {
+                checkout();
+            }
+            
+            swipeHandle.style.left = '4px';
+            swipeButton.style.backgroundPosition = '100% 0';
+        }
+
+        document.getElementById('menu-toggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            renderProducts(e.target.value);
+        });
+
+        document.getElementById('view-cart-btn').addEventListener('click', () => {
+            document.getElementById('cart-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('close-cart').addEventListener('click', () => {
+            document.getElementById('cart-modal').classList.add('hidden');
+        });
+
+        window.addToCart = addToCart;
+        window.changeQuantity = changeQuantity;
+
+        renderProducts();
+        updateCart();
+
+        // Check authentication and photo verification
+        if (!localStorage.getItem('employeeId')) {
+            window.location.href = 'login.html';
+        } else if (localStorage.getItem('needsPhotoVerification') === 'true') {
+            window.location.href = 'photo-verification.html';
+        }
+    </script>
+</body>
+</html>
