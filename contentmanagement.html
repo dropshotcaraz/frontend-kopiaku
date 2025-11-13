@@ -3,217 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Management - KopiAku</title>
+    <title>Content Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'primary': '#2a1bed',
-                        'coffee': '#6f4e37',
+                        'primary-blue': '#1c0cdc',
+                        'accent-coffee': '#6f4e37',
                     }
                 }
             }
         }
     </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { width: 280px; background-color: #1c0cdc; color: white; transition: transform 0.3s; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 50; transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+        }
+        .menu-item { display: flex; align-items: center; padding: 0.75rem 1rem; cursor: pointer; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: background-color 0.2s; }
+        .menu-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .menu-item.active { background-color: rgba(255, 255, 255, 0.2); font-weight: 600; }
+        .tab-btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .tab-btn.active { border-bottom-color: #1c0cdc; color: #1c0cdc; background-color: #f3f4f6; }
+    </style>
 </head>
 <body class="bg-gray-50">
-    <div class="min-h-screen flex">
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-white border-b z-40 flex items-center justify-between p-4">
+        <button id="menu-toggle" class="p-2 rounded-lg text-primary-blue">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <h1 class="text-xl font-bold">Content Management</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-primary text-white shadow-lg">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold">Kopi<span class="text-yellow-300">Aku</span></h1>
-                <p class="text-sm text-gray-300 mt-2">Content Management</p>
-            </div>
-            <nav class="p-4 space-y-2">
-                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg bg-opacity-20 bg-white" data-section="hero">
-                    <span class="font-semibold">Hero Section</span>
-                </button>
-                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="about">
-                    <span class="font-semibold">Tentang Kami</span>
-                </button>
-                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="menu">
-                    <span class="font-semibold">Menu</span>
-                </button>
-                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="promo">
-                    <span class="font-semibold">Promosi</span>
-                </button>
-                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="location">
-                    <span class="font-semibold">Lokasi & Kontak</span>
-                </button>
-                <button class="nav-btn w-full text-left px-4 py-3 rounded-lg hover:bg-opacity-20 hover:bg-white" data-section="carousel">
-                    <span class="font-semibold">Carousel Images</span>
+        <aside id="sidebar" class="sidebar">
+            <div class="p-6"><h1 class="text-2xl font-bold">Kopi<span class="text-accent-coffee">Aku</span></h1></div>
+            <nav class="p-4">
+                <a href="dashboard.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-10l2-2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span>Dashboard</span></a>
+                <a href="cashier.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Cashier</span></a>
+                <a href="stock.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg><span>Stock Management</span></a>
+                <a href="recipes.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg><span>Coffee Recipes</span></a>
+                <a href="transaction.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>QRIS Transactions</span></a>
+                <a href="employee.html" class="menu-item"><svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10h.01M13 16h2v2h-2zm4-6h.01M19 13h-6a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-6a2 2 0 00-2-2zm-9-1a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><span>Employees</span></a>
+                <button id="logout-btn" class="w-full flex items-center justify-center p-3 rounded-lg bg-red-500 hover:bg-red-600 active:bg-red-700 transition-all duration-200 font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-105 mt-4">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span>Logout</span>
                 </button>
             </nav>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-8">
-            <div class="max-w-5xl">
-                <h2 class="text-4xl font-bold text-gray-900 mb-8">Kelola Konten Landing Page</h2>
+        <main class="flex-1 p-6 mt-16 md:mt-0">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold">Content Management</h2>
+                <p class="text-gray-600 mt-1">Kelola konten landing page Kopi Aku</p>
+            </div>
 
+            <!-- Tabs -->
+            <div class="bg-white rounded-lg shadow-md mb-6 flex flex-wrap border-b">
+                <button class="tab-btn active" data-tab="hero">Hero Section</button>
+                <button class="tab-btn" data-tab="about">Tentang Kami</button>
+                <button class="tab-btn" data-tab="menu">Menu</button>
+                <button class="tab-btn" data-tab="promo">Promosi</button>
+                <button class="tab-btn" data-tab="location">Lokasi & Kontak</button>
+                <button class="tab-btn" data-tab="carousel">Carousel Images</button>
+            </div>
+
+            <div class="max-w-5xl">
                 <!-- Hero Section -->
-                <section id="hero" class="section-content bg-white p-8 rounded-xl shadow-md mb-8">
+                <section id="hero-content" class="tab-content bg-white p-8 rounded-lg shadow-md">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary">Hero Section</h3>
-                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="hero">
-                            Simpan Perubahan
+                        <h3 class="text-2xl font-bold text-primary-blue">Hero Section</h3>
+                        <button class="save-btn bg-primary-blue text-white px-6 py-2 rounded-lg hover:bg-opacity-90 font-semibold" data-target="hero">
+                            Simpan
                         </button>
                     </div>
                     
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Judul Hero</label>
-                            <input type="text" id="hero-title" class="input input-bordered w-full" placeholder="Kopi Berkualitas, Harga Bersahabat.">
+                            <input type="text" id="hero-title" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" placeholder="Kopi Berkualitas, Harga Bersahabat.">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi Hero</label>
-                            <textarea id="hero-desc" class="textarea textarea-bordered w-full h-24" placeholder="Kami percaya setiap orang berhak menikmati secangkir kopi yang baik..."></textarea>
+                            <textarea id="hero-desc" rows="4" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" placeholder="Kami percaya setiap orang berhak menikmati secangkir kopi yang baik..."></textarea>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Background Image URL</label>
-                            <input type="text" id="hero-bg" class="input input-bordered w-full" placeholder="URL gambar background">
+                            <input type="text" id="hero-bg" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" placeholder="URL gambar background">
                         </div>
                     </div>
                 </section>
 
                 <!-- About Section -->
-                <section id="about" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                <section id="about-content" class="tab-content hidden bg-white p-8 rounded-lg shadow-md">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary">Tentang Kami</h3>
-                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="about">
-                            Simpan Perubahan
+                        <h3 class="text-2xl font-bold text-primary-blue">Tentang Kami</h3>
+                        <button class="save-btn bg-primary-blue text-white px-6 py-2 rounded-lg hover:bg-opacity-90 font-semibold" data-target="about">
+                            Simpan
                         </button>
                     </div>
 
                     <div class="space-y-6">
-                        <!-- Story Section -->
                         <div class="border-t pt-6">
                             <h4 class="text-lg font-bold text-gray-900 mb-4">Kisah Kopi Aku</h4>
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Paragraf 1</label>
-                                    <textarea id="about-story-1" class="textarea textarea-bordered w-full h-20"></textarea>
+                                    <textarea id="about-story-1" rows="3" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"></textarea>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Paragraf 2</label>
-                                    <textarea id="about-story-2" class="textarea textarea-bordered w-full h-20"></textarea>
+                                    <textarea id="about-story-2" rows="3" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"></textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Vision -->
                         <div class="border-t pt-6">
                             <h4 class="text-lg font-bold text-gray-900 mb-4">Visi Kami</h4>
-                            <textarea id="about-vision" class="textarea textarea-bordered w-full h-20"></textarea>
+                            <textarea id="about-vision" rows="3" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"></textarea>
                         </div>
 
-                        <!-- Mission -->
                         <div class="border-t pt-6">
                             <h4 class="text-lg font-bold text-gray-900 mb-4">Misi Kami</h4>
-                            <div id="mission-items" class="space-y-2">
-                                <!-- Mission items will be added here -->
-                            </div>
-                            <button class="mt-4 btn btn-sm btn-outline" id="add-mission">+ Tambah Misi</button>
+                            <div id="mission-items" class="space-y-2 mb-4"></div>
+                            <button class="text-primary-blue hover:underline font-semibold" id="add-mission">+ Tambah Misi</button>
                         </div>
 
-                        <!-- Origin -->
                         <div class="border-t pt-6">
                             <h4 class="text-lg font-bold text-gray-900 mb-4">Awal Mula</h4>
-                            <textarea id="about-origin" class="textarea textarea-bordered w-full h-20"></textarea>
+                            <textarea id="about-origin" rows="3" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"></textarea>
                         </div>
                     </div>
                 </section>
 
                 <!-- Menu Section -->
-                <section id="menu" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                <section id="menu-content" class="tab-content hidden bg-white p-8 rounded-lg shadow-md">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary">Menu</h3>
-                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="menu">
-                            Simpan Perubahan
+                        <h3 class="text-2xl font-bold text-primary-blue">Menu</h3>
+                        <button class="save-btn bg-primary-blue text-white px-6 py-2 rounded-lg hover:bg-opacity-90 font-semibold" data-target="menu">
+                            Simpan
                         </button>
                     </div>
 
-                    <div id="menu-categories" class="space-y-6">
-                        <!-- Menu categories will be populated here -->
-                    </div>
-                    <button class="mt-6 btn btn-primary" id="add-category">+ Tambah Kategori Menu</button>
+                    <div id="menu-categories" class="space-y-6 mb-6"></div>
+                    <button class="text-primary-blue hover:underline font-semibold" id="add-category">+ Tambah Kategori Menu</button>
                 </section>
 
                 <!-- Promo Section -->
-                <section id="promo" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                <section id="promo-content" class="tab-content hidden bg-white p-8 rounded-lg shadow-md">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary">Promosi Spesial</h3>
-                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="promo">
-                            Simpan Perubahan
+                        <h3 class="text-2xl font-bold text-primary-blue">Promosi Spesial</h3>
+                        <button class="save-btn bg-primary-blue text-white px-6 py-2 rounded-lg hover:bg-opacity-90 font-semibold" data-target="promo">
+                            Simpan
                         </button>
                     </div>
 
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Judul Promosi</label>
-                            <input type="text" id="promo-title" class="input input-bordered w-full" placeholder="Promosi Spesial Untukmu!">
+                            <input type="text" id="promo-title" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" placeholder="Promosi Spesial Untukmu!">
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Daftar Aturan Promosi</label>
-                            <div id="promo-rules" class="space-y-3">
-                                <!-- Promo rules will be populated here -->
-                            </div>
-                            <button class="mt-4 btn btn-sm btn-outline" id="add-rule">+ Tambah Aturan</button>
+                            <div id="promo-rules" class="space-y-3 mb-4"></div>
+                            <button class="text-primary-blue hover:underline font-semibold" id="add-rule">+ Tambah Aturan</button>
                         </div>
                     </div>
                 </section>
 
                 <!-- Location & Contact Section -->
-                <section id="location" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                <section id="location-content" class="tab-content hidden bg-white p-8 rounded-lg shadow-md">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary">Lokasi & Kontak</h3>
-                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="location">
-                            Simpan Perubahan
+                        <h3 class="text-2xl font-bold text-primary-blue">Lokasi & Kontak</h3>
+                        <button class="save-btn bg-primary-blue text-white px-6 py-2 rounded-lg hover:bg-opacity-90 font-semibold" data-target="location">
+                            Simpan
                         </button>
                     </div>
 
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Jam Operasional</label>
-                            <input type="text" id="location-hours" class="input input-bordered w-full" placeholder="20:00 - 02:00 WIB">
+                            <input type="text" id="location-hours" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" placeholder="20:00 - 02:00 WIB">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat</label>
-                            <textarea id="location-address" class="textarea textarea-bordered w-full h-20"></textarea>
+                            <textarea id="location-address" rows="3" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"></textarea>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor WhatsApp</label>
-                            <input type="text" id="location-phone" class="input input-bordered w-full" placeholder="6287814811610">
+                            <input type="text" id="location-phone" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" placeholder="6287814811610">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Instagram Handle</label>
-                            <input type="text" id="location-instagram" class="input input-bordered w-full" placeholder="@kopiakuu">
+                            <input type="text" id="location-instagram" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" placeholder="@kopiakuu">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Google Maps Embed URL</label>
-                            <textarea id="location-map" class="textarea textarea-bordered w-full h-20"></textarea>
+                            <textarea id="location-map" rows="3" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"></textarea>
                         </div>
                     </div>
                 </section>
 
                 <!-- Carousel Images Section -->
-                <section id="carousel" class="section-content hidden bg-white p-8 rounded-xl shadow-md mb-8">
+                <section id="carousel-content" class="tab-content hidden bg-white p-8 rounded-lg shadow-md">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary">Gambar Carousel</h3>
-                        <button class="save-btn bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90" data-target="carousel">
-                            Simpan Perubahan
+                        <h3 class="text-2xl font-bold text-primary-blue">Gambar Carousel</h3>
+                        <button class="save-btn bg-primary-blue text-white px-6 py-2 rounded-lg hover:bg-opacity-90 font-semibold" data-target="carousel">
+                            Simpan
                         </button>
                     </div>
 
-                    <div id="carousel-images" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Carousel images will be populated here -->
-                    </div>
-                    <button class="mt-6 btn btn-primary" id="add-carousel-image">+ Tambah Gambar</button>
+                    <div id="carousel-images" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"></div>
+                    <button class="text-primary-blue hover:underline font-semibold" id="add-carousel-image">+ Tambah Gambar</button>
                 </section>
             </div>
         </main>
@@ -284,8 +297,8 @@
             const missionContainer = document.getElementById('mission-items');
             missionContainer.innerHTML = contentData.about.mission.map((mission, idx) => `
                 <div class="flex gap-2">
-                    <input type="text" class="input input-bordered flex-1" value="${mission}" data-mission="${idx}">
-                    <button class="btn btn-sm btn-error" onclick="removeMission(${idx})">Hapus</button>
+                    <input type="text" class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" value="${mission}" data-mission="${idx}">
+                    <button class="text-red-600 hover:text-red-700" onclick="removeMission(${idx})">Hapus</button>
                 </div>
             `).join('');
 
@@ -294,19 +307,19 @@
             menuContainer.innerHTML = contentData.menu.map((cat, idx) => `
                 <div class="border rounded-lg p-4">
                     <div class="flex justify-between mb-3">
-                        <input type="text" class="input input-bordered flex-1 mr-2" value="${cat.category}" data-category="${idx}" placeholder="Nama Kategori">
-                        <button class="btn btn-sm btn-error" onclick="removeCategory(${idx})">Hapus</button>
+                        <input type="text" class="flex-1 mr-2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" value="${cat.category}" data-category="${idx}" placeholder="Nama Kategori">
+                        <button class="text-red-600 hover:text-red-700" onclick="removeCategory(${idx})">Hapus</button>
                     </div>
                     <div class="space-y-2 ml-4" id="items-${idx}">
                         ${cat.items.map((item, itemIdx) => `
                             <div class="flex gap-2">
-                                <input type="text" class="input input-bordered flex-1" value="${item.name}" placeholder="Nama Item" data-item-name="${idx}-${itemIdx}">
-                                <input type="number" class="input input-bordered w-24" value="${item.price}" placeholder="Harga" data-item-price="${idx}-${itemIdx}">
-                                <button class="btn btn-sm btn-error" onclick="removeMenuItem(${idx}, ${itemIdx})">Hapus</button>
+                                <input type="text" class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" value="${item.name}" placeholder="Nama Item" data-item-name="${idx}-${itemIdx}">
+                                <input type="number" class="w-24 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" value="${item.price}" placeholder="Harga" data-item-price="${idx}-${itemIdx}">
+                                <button class="text-red-600 hover:text-red-700" onclick="removeMenuItem(${idx}, ${itemIdx})">Hapus</button>
                             </div>
                         `).join('')}
                     </div>
-                    <button class="mt-2 btn btn-sm btn-outline" onclick="addMenuItem(${idx})">+ Tambah Item</button>
+                    <button class="mt-2 text-primary-blue hover:underline text-sm font-semibold" onclick="addMenuItem(${idx})">+ Tambah Item</button>
                 </div>
             `).join('');
 
@@ -315,8 +328,8 @@
             const rulesContainer = document.getElementById('promo-rules');
             rulesContainer.innerHTML = contentData.promo.rules.map((rule, idx) => `
                 <div class="flex gap-2">
-                    <input type="text" class="input input-bordered flex-1" value="${rule}" data-rule="${idx}">
-                    <button class="btn btn-sm btn-error" onclick="removeRule(${idx})">Hapus</button>
+                    <input type="text" class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue" value="${rule}" data-rule="${idx}">
+                    <button class="text-red-600 hover:text-red-700" onclick="removeRule(${idx})">Hapus</button>
                 </div>
             `).join('');
 
@@ -332,21 +345,21 @@
             carouselContainer.innerHTML = contentData.carousel.map((img, idx) => `
                 <div class="border rounded-lg p-4">
                     <img src="${img.url}" alt="${img.alt}" class="w-full h-48 object-cover rounded mb-3">
-                    <input type="text" class="input input-bordered w-full mb-2" value="${img.url}" placeholder="Image URL" data-carousel-url="${idx}">
-                    <input type="text" class="input input-bordered w-full mb-2" value="${img.alt}" placeholder="Alt Text" data-carousel-alt="${idx}">
-                    <button class="btn btn-sm btn-error w-full" onclick="removeCarousel(${idx})">Hapus Gambar</button>
+                    <input type="text" class="w-full p-2 border rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-primary-blue" value="${img.url}" placeholder="Image URL" data-carousel-url="${idx}">
+                    <input type="text" class="w-full p-2 border rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-primary-blue" value="${img.alt}" placeholder="Alt Text" data-carousel-alt="${idx}">
+                    <button class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 text-sm font-semibold" onclick="removeCarousel(${idx})">Hapus Gambar</button>
                 </div>
             `).join('');
         }
 
-        // Navigation
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        // Tab Navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const section = btn.getAttribute('data-section');
-                document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
-                document.getElementById(section).classList.remove('hidden');
-                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('bg-opacity-20', 'bg-white'));
-                btn.classList.add('bg-opacity-20', 'bg-white');
+                const tabName = btn.getAttribute('data-tab');
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+                document.getElementById(tabName + '-content').classList.remove('hidden');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
             });
         });
 
@@ -456,6 +469,17 @@
         document.getElementById('add-category').addEventListener('click', addCategory);
         document.getElementById('add-rule').addEventListener('click', addRule);
         document.getElementById('add-carousel-image').addEventListener('click', addCarouselImage);
+
+        // Mobile menu toggle
+        document.getElementById('menu-toggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
 
         // Initial load
         loadContent();
