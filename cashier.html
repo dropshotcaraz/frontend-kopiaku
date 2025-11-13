@@ -80,30 +80,50 @@
 
         <!-- Main Content -->
         <main class="flex-1 p-6 mt-16 md:mt-0 mb-32 md:mb-0">
-            <div class="mb-6">
-                <h2 class="text-3xl font-bold mb-4">Cashier</h2>
-                <div class="relative">
-                    <input type="text" id="search-input" placeholder="Search products..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
-                    <svg class="w-5 h-5 absolute left-3 top-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <h2 class="text-3xl font-bold mb-6">Cashier</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Product Grid -->
+                <div class="lg:col-span-2">
+                    <div class="mb-4">
+                        <div class="relative">
+                            <input type="text" id="search-input" placeholder="Search products..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue">
+                            <svg class="w-5 h-5 absolute left-3 top-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Product List</h3>
+                        <div id="product-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+                    </div>
+                </div>
+
+                <!-- Desktop Cart -->
+                <div class="hidden lg:block lg:col-span-1">
+                    <div class="bg-white p-4 rounded-xl shadow-md sticky top-6">
+                        <h3 class="text-xl font-semibold mb-4">Shopping Cart</h3>
+                        <div id="cart-items-desktop" class="mb-4 max-h-96 overflow-y-auto"></div>
+                        <div class="border-t pt-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-lg font-semibold">Total:</span>
+                                <span id="cart-total-desktop" class="text-2xl font-bold text-primary-blue">Rp 0</span>
+                            </div>
+                            <button id="checkout-btn-desktop" class="w-full bg-primary-blue text-white py-3 rounded-lg font-bold hover:bg-opacity-90 transition-colors shadow-md">Pay</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="product-list"></div>
         </main>
     </div>
 
-    <!-- Mobile Cart -->
+    <!-- Mobile Cart - Shows items in modal -->
     <div class="cart-mobile p-4 shadow-lg">
-        <div class="flex justify-between items-center mb-3">
-            <span class="font-semibold">Total:</span>
-            <span id="cart-total-mobile" class="text-2xl font-bold text-primary-blue">Rp 0</span>
-        </div>
-        <button id="view-cart-btn" class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-bold mb-2">
-            View Cart (<span id="cart-count">0</span>)
+        <button id="view-cart-btn" class="w-full bg-primary-blue text-white py-3 rounded-lg font-bold mb-2 flex justify-between items-center px-4">
+            <span>View Cart (<span id="cart-count">0</span>)</span>
+            <span id="cart-total-mobile" class="text-xl font-bold">Rp 0</span>
         </button>
     </div>
 
-    <!-- Cart Modal -->
+    <!-- Cart Modal for Mobile -->
     <div id="cart-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center">
         <div class="bg-white w-full md:max-w-lg md:rounded-t-2xl rounded-t-2xl md:rounded-2xl p-6 max-h-[80vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
@@ -112,11 +132,11 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div id="cart-items" class="mb-4 space-y-3"></div>
+            <div id="cart-items-mobile" class="mb-4 space-y-3"></div>
             <div class="border-t pt-4">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-lg font-semibold">Total:</span>
-                    <span id="cart-total" class="text-2xl font-bold text-primary-blue">Rp 0</span>
+                    <span id="cart-total-modal" class="text-2xl font-bold text-primary-blue">Rp 0</span>
                 </div>
                 <div class="relative h-14 bg-gray-200 rounded-lg overflow-hidden swipe-button" id="swipe-button">
                     <div class="swipe-handle" id="swipe-handle">
@@ -131,12 +151,12 @@
     <script>
         let cart = [];
         const products = JSON.parse(localStorage.getItem('products')) || [
-            { id: 1, name: 'Americano', price: 25000, recipe: 'americano' },
-            { id: 2, name: 'Latte', price: 30000, recipe: 'latte' },
-            { id: 3, name: 'Cappuccino', price: 32000, recipe: 'cappuccino' },
-            { id: 4, name: 'Espresso', price: 20000, recipe: 'espresso' },
-            { id: 5, name: 'Mocha', price: 35000, recipe: 'mocha' },
-            { id: 6, name: 'Croissant', price: 18000, recipe: null },
+            { id: 1, name: 'Americano', price: 25000, recipe: 'americano', image: 'https://placehold.co/150x150/6f4e37/ffffff?text=Americano' },
+            { id: 2, name: 'Latte', price: 30000, recipe: 'latte', image: 'https://placehold.co/150x150/6f4e37/ffffff?text=Latte' },
+            { id: 3, name: 'Cappuccino', price: 32000, recipe: 'cappuccino', image: 'https://placehold.co/150x150/6f4e37/ffffff?text=Cappuccino' },
+            { id: 4, name: 'Espresso', price: 20000, recipe: 'espresso', image: 'https://placehold.co/150x150/6f4e37/ffffff?text=Espresso' },
+            { id: 5, name: 'Mocha', price: 35000, recipe: 'mocha', image: 'https://placehold.co/150x150/6f4e37/ffffff?text=Mocha' },
+            { id: 6, name: 'Croissant', price: 18000, recipe: null, image: 'https://placehold.co/150x150/6f4e37/ffffff?text=Croissant' },
         ];
 
         const recipes = JSON.parse(localStorage.getItem('recipes')) || {
@@ -151,10 +171,10 @@
             const list = document.getElementById('product-list');
             const filtered = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
             list.innerHTML = filtered.map(p => `
-                <div class="bg-white p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow" onclick="addToCart(${p.id})">
-                    <div class="bg-gradient-to-br from-accent-coffee to-primary-blue h-32 rounded-lg mb-3"></div>
-                    <h4 class="font-bold text-sm mb-1">${p.name}</h4>
-                    <p class="text-primary-blue font-semibold">Rp ${p.price.toLocaleString('id-ID')}</p>
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow" onclick="addToCart(${p.id})">
+                    <img src="${p.image}" alt="${p.name}" class="w-full h-24 object-cover rounded-md mb-2">
+                    <h4 class="font-bold text-sm truncate">${p.name}</h4>
+                    <p class="text-sm font-semibold text-primary-blue">Rp ${p.price.toLocaleString('id-ID')}</p>
                 </div>
             `).join('');
         }
@@ -172,12 +192,29 @@
 
         function updateCart() {
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            document.getElementById('cart-total').textContent = `Rp ${total.toLocaleString('id-ID')}`;
-            document.getElementById('cart-total-mobile').textContent = `Rp ${total.toLocaleString('id-ID')}`;
-            document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             
-            const items = document.getElementById('cart-items');
-            items.innerHTML = cart.length ? cart.map(item => `
+            // Update all total displays
+            document.getElementById('cart-total-desktop').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('cart-total-mobile').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('cart-total-modal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('cart-count').textContent = count;
+            
+            // Render cart items for desktop
+            const desktopItems = document.getElementById('cart-items-desktop');
+            desktopItems.innerHTML = cart.length ? cart.map(item => `
+                <div class="flex justify-between items-center py-2 border-b">
+                    <div>
+                        <h4 class="font-semibold text-sm">${item.name}</h4>
+                        <p class="text-xs text-gray-500">${item.quantity} x Rp ${item.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <span class="font-bold text-sm text-primary-blue">Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+                </div>
+            `).join('') : '<p class="text-center text-gray-400">Cart is empty</p>';
+            
+            // Render cart items for mobile modal
+            const mobileItems = document.getElementById('cart-items-mobile');
+            mobileItems.innerHTML = cart.length ? cart.map(item => `
                 <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
                     <div>
                         <h4 class="font-semibold">${item.name}</h4>
@@ -210,7 +247,7 @@
             cart.forEach(item => {
                 if (item.recipe && recipes[item.recipe]) {
                     Object.entries(recipes[item.recipe]).forEach(([ingredient, amount]) => {
-                        stock[ingredient] = (stock[ingredient] || 0) - (amount * item.quantity);
+                        stock[ingredient] = (stock[ingredient]?.quantity || 0) - (amount * item.quantity);
                     });
                 }
             });
@@ -222,7 +259,10 @@
             document.getElementById('cart-modal').classList.add('hidden');
         }
 
-        // Swipe to pay logic
+        // Desktop checkout button
+        document.getElementById('checkout-btn-desktop').addEventListener('click', checkout);
+
+        // Mobile swipe to pay
         const swipeButton = document.getElementById('swipe-button');
         const swipeHandle = document.getElementById('swipe-handle');
         let isDragging = false;
@@ -289,12 +329,14 @@
         renderProducts();
         updateCart();
 
-        // // Check authentication and photo verification
+        // Check authentication and photo verification
         // if (!localStorage.getItem('employeeId')) {
         //     window.location.href = 'login.html';
-        // } else if (localStorage.getItem('needsPhotoVerification') === 'true') {
-        //     window.location.href = 'photo-verification.html';
         // }
+        // Photo verification temporarily disabled for testing
+        /* else if (localStorage.getItem('needsPhotoVerification') === 'true') {
+            window.location.href = 'photo-verification.html';
+        } */
     </script>
 </body>
 </html>
