@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Penggunaan Dashboard KopiAku POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1c0cdc',
+                        'accent-coffee': '#6f4e37',
+                        'soft-gray': '#f8fafc'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .sidebar {
+            width: 280px;
+            background-color: #1c0cdc;
+            color: white;
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        @media (min-width: 769px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 50;
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+        .content-section {
+            margin-bottom: 2rem;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #1c0cdc 0%, #6f4e37 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-white border-b z-40 flex items-center justify-between p-4">
+        <button id="menu-toggle" class="p-2 rounded-lg text-primary-blue">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+        <h1 class="text-xl font-bold">Panduan KopiAku</h1>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="p-4 flex items-center justify-center">
+                <img src="https://image2url.com/images/1761181262257-636d5ce0-5d3b-4be6-a084-f3ff601abc8f.png" alt="KOPI AKU Logo" class="h-16 w-16">
+            </div>
+            <nav class="p-4">
+                <div class="text-center mb-6">
+                    <h2 class="text-lg font-bold">Panduan Lengkap</h2>
+                    <p class="text-sm opacity-80">Dashboard KopiAku POS</p>
+                </div>
+                <a href="#pendahuluan" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Pendahuluan</span>
+                </a>
+                <a href="#alur" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    <span>Alur Penggunaan</span>
+                </a>
+                <a href="#dashboard" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-10l2-2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span>Menu Dashboard</span>
+                </a>
+                <a href="#kasir" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Menu Kasir</span>
+                </a>
+                <a href="#stok" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <span>Menu Stok</span>
+                </a>
+                <a href="#resep" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    <span>Menu Resep Kopi</span>
+                </a>
+                <a href="#transaksi" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Menu Transaksi QRIS</span>
+                </a>
+                <a href="#karyawan" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10h.01M13 16h2v2h-2zm4-6h.01M19 13h-6a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-6a2 2 0 00-2-2zm-9-1a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Menu Karyawan ⚠️</span>
+                </a>
+                <a href="#content" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Content Management ⚠️</span>
+                </a>
+                <a href="#troubleshooting" class="menu-item">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <span>Troubleshooting</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mt-16 md:mt-0">
+            <div class="max-w-4xl mx-auto">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl font-bold text-primary-blue mb-2">Panduan Lengkap</h1>
+                    <h2 class="text-2xl text-accent-coffee mb-4">Dashboard KopiAku POS</h2>
+                    <p class="text-gray-600">Sistem Manajemen Point-of-Sale untuk Kedai Kopi KopiAku</p>
+                </div>
+
+                <!-- Pendahuluan -->
+                <section id="pendahuluan" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Pendahuluan</h3>
+                    
+                    <div class="highlight-box">
+                        <h4 class="text-xl font-bold mb-2">Tentang Dashboard KopiAku POS</h4>
+                        <p>Dashboard KopiAku POS adalah sistem manajemen point-of-sale (POS) yang dirancang khusus untuk operasional kedai kopi KopiAku. Sistem ini memungkinkan pengelolaan transaksi, stok bahan baku, resep kopi, karyawan, dan konten landing page secara terintegrasi.</p>
+                    </div>
+
+                    <h4 class="text-xl font-bold mb-4">Tingkat Akses Pengguna</h4>
+                    <p class="mb-4">Sistem ini memiliki <strong>dua tingkat akses pengguna</strong>:</p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300 mb-6">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="border border-gray-300 p-3 text-left font-semibold">Peran</th>
+                                    <th class="border border-gray-300 p-3 text-left font-semibold">Akses Menu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-300 p-3"><strong>Kasir/Barista</strong></td>
+                                    <td class="border border-gray-300 p-3">Dashboard, Kasir, Stok, Resep Kopi, Transaksi QRIS</td>
+                                </tr>
+                                <tr class="bg-gray-50">
+                                    <td class="border border-gray-300 p-3"><strong>Manager</strong></td>
+                                    <td class="border border-gray-300 p-3">Semua menu termasuk <strong>Manajemen Karyawan</strong> dan <strong>Content Management</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    <strong>Catatan Penting:</strong> Hanya pengguna dengan peran <strong>Manager</strong> yang dapat mengakses halaman Manajemen Karyawan dan Content Management.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Alur Penggunaan -->
+                <section id="alur" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Alur Penggunaan Sistem</h3>
+
+                    <h4 class="text-xl font-bold mb-4">1. Login ke Sistem</h4>
+                    <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                        <h5 class="font-semibold mb-2">Langkah-langkah Login:</h5>
+                        <ol class="list-decimal list-inside space-y-1 mb-4">
+                            <li>Buka halaman <strong>login.html</strong> di browser</li>
+                            <li>Masukkan <strong>username</strong> dan <strong>password</strong> yang telah terdaftar</li>
+                            <li>Klik tombol <strong>Login</strong></li>
+                            <li>Sistem akan mengarahkan ke halaman <strong>Verifikasi Foto</strong> (jika diperlukan)</li>
+                            <li>Setelah verifikasi berhasil, pengguna akan diarahkan ke <strong>Dashboard</strong></li>
+                        </ol>
+                    </div>
+
+                    <h4 class="text-xl font-bold mb-4">2. Verifikasi Foto</h4>
+                    <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                        <p class="mb-4">Untuk keamanan dan pencatatan kehadiran, setiap karyawan harus melakukan verifikasi foto saat login:</p>
+                        <ol class="list-decimal list-inside space-y-1">
+                            <li>Izinkan akses kamera pada browser</li>
+                            <li>Posisikan wajah di dalam bingkai yang tersedia</li>
+                            <li>Klik tombol <strong>Ambil Foto</strong></li>
+                            <li>Konfirmasi foto yang diambil</li>
+                            <li>Sistem akan mencatat waktu masuk shift</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Menu Dashboard -->
+                <section id="dashboard" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Menu Dashboard</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Halaman Utama Dashboard</h4>
+                    <p class="mb-4">Halaman Dashboard menampilkan ringkasan operasional harian:</p>
+                    <ul class="list-disc list-inside space-y-1 mb-6">
+                        <li><strong>Penjualan Hari Ini</strong> - Total pendapatan hari ini</li>
+                        <li><strong>Jumlah Transaksi</strong> - Banyaknya transaksi yang dilakukan</li>
+                        <li><strong>Stok Menipis</strong> - Peringatan bahan baku yang hampir habis</li>
+                        <li><strong>Pesanan Aktif</strong> - Jumlah pesanan yang sedang diproses</li>
+                    </ul>
+
+                    <h4 class="text-xl font-bold mb-4">Navigasi Sidebar</h4>
+                    <p class="mb-4">Sidebar terletak di sisi kiri layar dan berisi menu-menu berikut:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-semibold mb-2">Menu Umum:</h5>
+                            <ul class="space-y-1 text-sm">
+                                <li>🏠 <strong>Dashboard</strong> - Halaman utama</li>
+                                <li>💰 <strong>Kasir</strong> - Sistem point-of-sale</li>
+                                <li>📦 <strong>Stok</strong> - Manajemen bahan baku</li>
+                                <li>📚 <strong>Resep Kopi</strong> - Daftar resep</li>
+                                <li>💳 <strong>Transaksi QRIS</strong> - Riwayat pembayaran</li>
+                            </ul>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                            <h5 class="font-semibold mb-2">Menu Manager:</h5>
+                            <ul class="space-y-1 text-sm">
+                                <li>👥 <strong>Karyawan</strong> - Manajemen karyawan</li>
+                                <li>📝 <strong>Content Management</strong> - Konten landing page</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Menu Kasir -->
+                <section id="kasir" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Menu Kasir</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Fungsi Utama</h4>
+                    <p class="mb-4">Menu Kasir digunakan untuk memproses transaksi penjualan.</p>
+
+                    <h4 class="text-xl font-bold mb-4">Langkah Membuat Transaksi:</h4>
+                    <div class="space-y-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-blue-800">1. Pilih Produk</h5>
+                            <p class="text-blue-700">Klik pada kartu produk yang ingin ditambahkan. Produk akan masuk ke keranjang di sisi kanan.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-green-800">2. Atur Jumlah</h5>
+                            <p class="text-green-700">Gunakan tombol + dan - untuk mengubah jumlah item. Atau klik tombol hapus untuk menghapus item.</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-purple-800">3. Proses Pembayaran</h5>
+                            <p class="text-purple-700">Periksa total harga di keranjang. Klik tombol Bayar atau Swipe to Pay (di versi mobile). Pilih metode pembayaran (Tunai/QRIS).</p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-orange-800">4. Cetak Struk</h5>
+                            <p class="text-orange-700">Setelah pembayaran berhasil, popup struk akan muncul. Klik Cetak Struk untuk mencetak bukti transaksi.</p>
+                        </div>
+                    </div>
+
+                    <h4 class="text-xl font-bold mb-4">Tampilan Mobile</h4>
+                    <p class="mb-4">Pada perangkat mobile, keranjang belanja tersembunyi dan dapat diakses melalui:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Tombol keranjang di bagian bawah layar</li>
+                        <li>Geser ke atas untuk melihat isi keranjang</li>
+                    </ul>
+                </section>
+
+                <!-- Menu Stok -->
+                <section id="stok" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Menu Stok</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Manajemen Bahan Baku</h4>
+                    <p class="mb-4">Menu Stok digunakan untuk mengelola persediaan bahan baku.</p>
+
+                    <h4 class="text-xl font-bold mb-4">Fitur yang Tersedia:</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                <span>Lihat Daftar Stok</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                <span>Tambah Bahan Baru</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                                <span>Edit Stok</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                <span>Hapus Bahan</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                                <span>Export Data</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="text-xl font-bold mb-4">Indikator Status Stok:</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-green-50 p-4 rounded-lg text-center">
+                            <div class="w-4 h-4 bg-green-500 rounded-full mx-auto mb-2"></div>
+                            <strong>Hijau</strong><br>
+                            <span class="text-sm">Stok Aman</span>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                            <div class="w-4 h-4 bg-yellow-500 rounded-full mx-auto mb-2"></div>
+                            <strong>Kuning</strong><br>
+                            <span class="text-sm">Perlu Restock</span>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg text-center">
+                            <div class="w-4 h-4 bg-red-500 rounded-full mx-auto mb-2"></div>
+                            <strong>Merah</strong><br>
+                            <span class="text-sm">Stok Habis</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Menu Resep Kopi -->
+                <section id="resep" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Menu Resep Kopi</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Pengelolaan Resep</h4>
+                    <p class="mb-4">Menu ini digunakan untuk mengelola resep minuman yang dijual.</p>
+
+                    <h4 class="text-xl font-bold mb-4">Melihat Resep</h4>
+                    <p class="mb-4">Setiap kartu resep menampilkan:</p>
+                    <ul class="list-disc list-inside space-y-1 mb-6">
+                        <li>Nama minuman</li>
+                        <li>Deskripsi singkat</li>
+                        <li>Daftar bahan dan takaran</li>
+                    </ul>
+
+                    <h4 class="text-xl font-bold mb-4">Menambah Resep Baru</h4>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Klik tombol <strong>Tambah Resep Baru</strong></li>
+                            <li>Isi form: Nama Resep, Deskripsi, Bahan-bahan</li>
+                            <li>Klik <strong>+ Tambah Bahan</strong> untuk menambah bahan lainnya</li>
+                            <li>Klik <strong>Simpan Resep</strong></li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Menu Transaksi QRIS -->
+                <section id="transaksi" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Menu Transaksi QRIS</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Riwayat Pembayaran Digital</h4>
+                    <p class="mb-4">Menu ini menampilkan riwayat transaksi pembayaran QRIS dan GoPay.</p>
+
+                    <h4 class="text-xl font-bold mb-4">Fitur yang Tersedia:</h4>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-blue-800">Import Transaksi</h5>
+                            <p class="text-blue-700">Klik Upload CSV, pilih file dari provider pembayaran, sistem akan memproses data.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-green-800">Lihat Riwayat</h5>
+                            <p class="text-green-700">Tabel menampilkan tanggal, ID transaksi, jumlah, dan status pembayaran.</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-purple-800">Filter & Pencarian</h5>
+                            <p class="text-purple-700">Gunakan kolom pencarian untuk mencari transaksi tertentu atau filter berdasarkan tanggal.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Menu Karyawan -->
+                <section id="karyawan" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <div class="highlight-box mb-6">
+                        <h4 class="text-xl font-bold mb-2">⚠️ Akses Terbatas</h4>
+                        <p>Menu ini hanya dapat diakses oleh pengguna dengan peran <strong>Manager</strong>.</p>
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Menu Karyawan</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Pengelolaan Karyawan</h4>
+
+                    <h5 class="text-lg font-semibold mb-4">Tab Karyawan</h5>
+                    <p class="mb-4">Menampilkan daftar semua karyawan yang terdaftar.</p>
+
+                    <h6 class="font-semibold mb-2">Menambah Karyawan Baru:</h6>
+                    <ol class="list-decimal list-inside space-y-1 mb-6">
+                        <li>Klik tombol <strong>Tambah Karyawan</strong></li>
+                        <li>Isi form: Nama, Posisi, Nomor telepon</li>
+                        <li>Klik <strong>Simpan</strong></li>
+                    </ol>
+
+                    <h5 class="text-lg font-semibold mb-4">Tab Shift Aktif</h5>
+                    <p class="mb-4">Menampilkan karyawan yang sedang bertugas hari ini.</p>
+
+                    <h6 class="font-semibold mb-2">Menambahkan Shift:</h6>
+                    <ol class="list-decimal list-inside space-y-1 mb-6">
+                        <li>Klik tombol <strong>Tambahkan Shift</strong></li>
+                        <li>Pilih karyawan dari dropdown</li>
+                        <li>Tentukan tanggal dan jam shift</li>
+                        <li>Klik <strong>Simpan</strong></li>
+                    </ol>
+
+                    <h5 class="text-lg font-semibold mb-4">Tab Riwayat Shift</h5>
+                    <p class="mb-4">Menampilkan riwayat shift yang telah selesai.</p>
+                    <p class="mb-4">Informasi yang ditampilkan:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Nama karyawan</li>
+                        <li>Tanggal shift</li>
+                        <li>Jam masuk dan keluar</li>
+                        <li>Status verifikasi foto</li>
+                        <li>Tombol Lihat Foto untuk verifikasi</li>
+                    </ul>
+                </section>
+
+                <!-- Content Management -->
+                <section id="content" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <div class="highlight-box mb-6">
+                        <h4 class="text-xl font-bold mb-2">⚠️ Akses Terbatas</h4>
+                        <p>Menu ini hanya dapat diakses oleh pengguna dengan peran <strong>Manager</strong>.</p>
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Menu Content Management</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Pengelolaan Konten Landing Page</h4>
+                    <p class="mb-4">Menu ini digunakan untuk mengatur konten yang tampil di halaman landing page publik KopiAku.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-blue-800">Hero Section</h5>
+                            <p class="text-blue-700 text-sm">Judul, deskripsi, background image</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-green-800">Tentang Kami</h5>
+                            <p class="text-green-700 text-sm">Kisah brand, visi, misi</p>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-yellow-800">Menu</h5>
+                            <p class="text-yellow-700 text-sm">Kategori dan item menu</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-purple-800">Promosi</h5>
+                            <p class="text-purple-700 text-sm">Judul dan aturan promo</p>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-pink-800">Lokasi & Kontak</h5>
+                            <p class="text-pink-700 text-sm">Alamat, jam, kontak</p>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-indigo-800">Carousel Images</h5>
+                            <p class="text-indigo-700 text-sm">Gambar slideshow</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h5 class="font-semibold mb-2">Menyimpan Perubahan</h5>
+                        <p>Setiap tab memiliki tombol <strong>Simpan</strong> tersendiri. Pastikan klik tombol ini setelah melakukan perubahan agar data tersimpan.</p>
+                    </div>
+                </section>
+
+                <!-- Troubleshooting -->
+                <section id="troubleshooting" class="content-section bg-white p-8 rounded-xl shadow-md">
+                    <h3 class="text-3xl font-bold text-primary-blue mb-6">Troubleshooting</h3>
+
+                    <h4 class="text-xl font-bold mb-4">Masalah Umum dan Solusi</h4>
+
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-red-400 bg-red-50 p-4">
+                            <h5 class="font-semibold text-red-800">1. Tidak Bisa Login</h5>
+                            <p class="text-red-700"><strong>Penyebab:</strong> Username atau password salah, akun belum terdaftar</p>
+                            <p class="text-red-700"><strong>Solusi:</strong> Periksa kembali kredensial, hubungi Manager</p>
+                        </div>
+
+                        <div class="border-l-4 border-blue-400 bg-blue-50 p-4">
+                            <h5 class="font-semibold text-blue-800">2. Kamera Tidak Berfungsi</h5>
+                            <p class="text-blue-700"><strong>Penyebab:</strong> Browser tidak memiliki izin akses kamera</p>
+                            <p class="text-blue-700"><strong>Solusi:</strong> Izinkan akses kamera, tutup aplikasi lain, refresh halaman</p>
+                        </div>
+
+                        <div class="border-l-4 border-green-400 bg-green-50 p-4">
+                            <h5 class="font-semibold text-green-800">3. Data Tidak Tersimpan</h5>
+                            <p class="text-green-700"><strong>Penyebab:</strong> Belum menekan tombol Simpan</p>
+                            <p class="text-green-700"><strong>Solusi:</strong> Pastikan menekan tombol Simpan setelah perubahan</p>
+                        </div>
+
+                        <div class="border-l-4 border-purple-400 bg-purple-50 p-4">
+                            <h5 class="font-semibold text-purple-800">4. Halaman Tidak Responsif</h5>
+                            <p class="text-purple-700"><strong>Solusi:</strong> Refresh halaman, bersihkan cache browser, coba browser lain</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menu-toggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

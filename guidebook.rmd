@@ -1,0 +1,415 @@
+---
+title: "Panduan Penggunaan Dashboard KopiAku POS"
+author: "Operasi Proyek Manproti"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: flatly
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+# Pendahuluan
+
+## Tentang Dashboard KopiAku POS
+
+Dashboard KopiAku POS adalah sistem manajemen point-of-sale (POS) yang dirancang khusus untuk operasional kedai kopi KopiAku. Sistem ini memungkinkan pengelolaan transaksi, stok bahan baku, resep kopi, karyawan, dan konten landing page secara terintegrasi.
+
+## Tingkat Akses Pengguna
+
+Sistem ini memiliki **dua tingkat akses pengguna**:
+
+| Peran | Akses Menu |
+|-------|------------|
+| **Kasir/Barista** | Dashboard, Kasir, Stok, Resep Kopi, Transaksi QRIS |
+| **Manager** | Semua menu termasuk **Manajemen Karyawan** dan **Content Management** |
+
+> **Catatan Penting:** Hanya pengguna dengan peran **Manager** yang dapat mengakses halaman Manajemen Karyawan dan Content Management.
+
+---
+
+# Alur Penggunaan Sistem
+
+## 1. Login ke Sistem
+
+### Langkah-langkah Login:
+
+1. Buka halaman **login.html** di browser
+2. Masukkan **username** dan **password** yang telah terdaftar
+3. Klik tombol **Login**
+4. Sistem akan mengarahkan ke halaman **Verifikasi Foto** (jika diperlukan)
+5. Setelah verifikasi berhasil, pengguna akan diarahkan ke **Dashboard**
+
+### Verifikasi Foto
+
+Untuk keamanan dan pencatatan kehadiran, setiap karyawan harus melakukan verifikasi foto saat login:
+
+1. Izinkan akses kamera pada browser
+2. Posisikan wajah di dalam bingkai yang tersedia
+3. Klik tombol **Ambil Foto**
+4. Konfirmasi foto yang diambil
+5. Sistem akan mencatat waktu masuk shift
+
+---
+
+# Menu Dashboard
+
+## Halaman Utama Dashboard
+
+Halaman Dashboard menampilkan ringkasan operasional harian:
+
+- **Penjualan Hari Ini** - Total pendapatan hari ini
+- **Jumlah Transaksi** - Banyaknya transaksi yang dilakukan
+- **Stok Menipis** - Peringatan bahan baku yang hampir habis
+- **Pesanan Aktif** - Jumlah pesanan yang sedang diproses
+
+### Navigasi Sidebar
+
+Sidebar terletak di sisi kiri layar dan berisi menu-menu berikut:
+
+1. **Dashboard** - Halaman utama
+2. **Kasir** - Sistem point-of-sale
+3. **Stok** - Manajemen bahan baku
+4. **Resep Kopi** - Daftar dan pengaturan resep
+5. **Transaksi QRIS** - Riwayat pembayaran digital
+6. **Karyawan** *(Khusus Manager)*
+7. **Content Management** *(Khusus Manager)*
+8. **Logout** - Keluar dari sistem
+
+---
+
+# Menu Kasir
+
+## Fungsi Utama
+
+Menu Kasir digunakan untuk memproses transaksi penjualan.
+
+### Langkah Membuat Transaksi:
+
+1. **Pilih Produk**
+   - Klik pada kartu produk yang ingin ditambahkan
+   - Produk akan masuk ke keranjang di sisi kanan
+
+2. **Atur Jumlah**
+   - Gunakan tombol **+** dan **-** untuk mengubah jumlah item
+   - Atau klik tombol hapus untuk menghapus item
+
+3. **Proses Pembayaran**
+   - Periksa total harga di keranjang
+   - Klik tombol **Bayar** atau **Swipe to Pay** (di versi mobile)
+   - Pilih metode pembayaran (Tunai/QRIS)
+
+4. **Cetak Struk**
+   - Setelah pembayaran berhasil, popup struk akan muncul
+   - Klik **Cetak Struk** untuk mencetak bukti transaksi
+   - Atau klik **Tutup** untuk melanjutkan transaksi berikutnya
+
+### Tampilan Mobile
+
+Pada perangkat mobile, keranjang belanja tersembunyi dan dapat diakses melalui:
+- Tombol keranjang di bagian bawah layar
+- Geser ke atas untuk melihat isi keranjang
+
+---
+
+# Menu Stok
+
+## Manajemen Bahan Baku
+
+Menu Stok digunakan untuk mengelola persediaan bahan baku.
+
+### Fitur yang Tersedia:
+
+1. **Lihat Daftar Stok**
+   - Tabel menampilkan nama bahan, jumlah, satuan, dan status
+
+2. **Tambah Bahan Baru**
+   - Klik tombol **Tambah Bahan**
+   - Isi nama bahan, jumlah awal, dan satuan
+   - Klik **Simpan**
+
+3. **Edit Stok**
+   - Klik ikon pensil pada baris bahan yang ingin diedit
+   - Ubah informasi yang diperlukan
+   - Klik **Simpan Perubahan**
+
+4. **Hapus Bahan**
+   - Klik ikon tempat sampah pada baris bahan
+   - Konfirmasi penghapusan
+
+5. **Export Data**
+   - Klik tombol **Export CSV** untuk mengunduh data stok
+
+### Indikator Status Stok:
+
+| Warna | Status | Keterangan |
+|-------|--------|------------|
+| Hijau | Aman | Stok mencukupi |
+| Kuning | Menipis | Perlu segera restock |
+| Merah | Habis | Stok kosong |
+
+---
+
+# Menu Resep Kopi
+
+## Pengelolaan Resep
+
+Menu ini digunakan untuk mengelola resep minuman yang dijual.
+
+### Melihat Resep
+
+Setiap kartu resep menampilkan:
+- Nama minuman
+- Deskripsi singkat
+- Daftar bahan dan takaran
+
+### Menambah Resep Baru
+
+1. Klik tombol **Tambah Resep Baru**
+2. Isi form:
+   - **Nama Resep** - Nama minuman
+   - **Deskripsi** - Penjelasan singkat
+   - **Bahan-bahan** - Pilih bahan dan masukkan takaran
+3. Klik **+ Tambah Bahan** untuk menambah bahan lainnya
+4. Klik **Simpan Resep**
+
+### Mengedit Resep
+
+1. Klik ikon pensil pada kartu resep
+2. Ubah informasi yang diperlukan
+3. Klik **Simpan Perubahan**
+
+### Menghapus Resep
+
+1. Klik ikon tempat sampah pada kartu resep
+2. Konfirmasi penghapusan
+
+---
+
+# Menu Transaksi QRIS
+
+## Riwayat Pembayaran Digital
+
+Menu ini menampilkan riwayat transaksi pembayaran QRIS dan GoPay.
+
+### Fitur yang Tersedia:
+
+1. **Import Transaksi**
+   - Klik tombol **Upload CSV**
+   - Pilih file CSV dari provider pembayaran (QRIS/GoPay)
+   - Sistem akan memproses dan menampilkan data
+
+2. **Lihat Riwayat**
+   - Tabel menampilkan:
+     - Tanggal & waktu transaksi
+     - ID Transaksi
+     - Jumlah pembayaran
+     - Status transaksi
+
+3. **Filter & Pencarian**
+   - Gunakan kolom pencarian untuk mencari transaksi tertentu
+   - Filter berdasarkan tanggal atau status
+
+---
+
+# Menu Karyawan (Khusus Manager)
+
+> ⚠️ **Akses Terbatas:** Menu ini hanya dapat diakses oleh pengguna dengan peran **Manager**.
+
+## Pengelolaan Karyawan
+
+### Tab Karyawan
+
+Menampilkan daftar semua karyawan yang terdaftar.
+
+**Menambah Karyawan Baru:**
+
+1. Klik tombol **Tambah Karyawan**
+2. Isi form:
+   - Nama lengkap
+   - Posisi/Jabatan
+   - Nomor telepon
+3. Klik **Simpan**
+
+**Mengedit Data Karyawan:**
+
+1. Klik ikon pensil pada kartu karyawan
+2. Ubah data yang diperlukan
+3. Klik **Simpan Perubahan**
+
+**Menghapus Karyawan:**
+
+1. Klik ikon tempat sampah
+2. Konfirmasi penghapusan
+
+### Tab Shift Aktif
+
+Menampilkan karyawan yang sedang bertugas hari ini.
+
+**Menambahkan Shift:**
+
+1. Klik tombol **Tambahkan Shift**
+2. Pilih karyawan dari dropdown
+3. Tentukan tanggal dan jam shift
+4. Klik **Simpan**
+
+### Tab Riwayat Shift
+
+Menampilkan riwayat shift yang telah selesai.
+
+**Informasi yang Ditampilkan:**
+
+- Nama karyawan
+- Tanggal shift
+- Jam masuk dan keluar
+- Status verifikasi foto
+- Tombol **Lihat Foto** untuk verifikasi
+
+**Verifikasi Foto:**
+
+1. Klik tombol **Lihat Foto** pada baris shift
+2. Modal akan menampilkan foto verifikasi karyawan
+3. Manager dapat memverifikasi kehadiran berdasarkan foto
+
+---
+
+# Menu Content Management (Khusus Manager)
+
+> ⚠️ **Akses Terbatas:** Menu ini hanya dapat diakses oleh pengguna dengan peran **Manager**.
+
+## Pengelolaan Konten Landing Page
+
+Menu ini digunakan untuk mengatur konten yang tampil di halaman landing page publik KopiAku.
+
+### Tab Hero Section
+
+Mengatur tampilan utama halaman landing page:
+
+- **Judul Hero** - Tagline utama
+- **Deskripsi Hero** - Kalimat pendukung
+- **Background Image URL** - Gambar latar belakang
+
+### Tab Tentang Kami
+
+Mengatur konten halaman "Tentang Kami":
+
+- **Kisah KopiAku** - Cerita tentang brand (2 paragraf)
+- **Visi Kami** - Pernyataan visi perusahaan
+- **Misi Kami** - Daftar misi (dapat ditambah/hapus)
+- **Awal Mula** - Sejarah singkat
+
+### Tab Menu
+
+Mengatur tampilan menu di landing page:
+
+1. **Tambah Kategori** - Buat kategori baru (contoh: "Refreshment Drink")
+2. **Tambah Item** - Tambahkan menu ke dalam kategori
+3. **Edit Harga** - Ubah harga setiap item
+4. **Hapus Item/Kategori** - Hapus yang tidak diperlukan
+
+### Tab Promosi
+
+Mengatur konten promosi:
+
+- **Judul Promosi** - Headline promosi
+- **Aturan Promosi** - Langkah-langkah klaim promo (dapat ditambah/hapus)
+
+### Tab Lokasi & Kontak
+
+Mengatur informasi kontak:
+
+- **Jam Operasional** - Waktu buka-tutup
+- **Alamat** - Alamat lengkap outlet
+- **Nomor WhatsApp** - Untuk pemesanan/pertanyaan
+- **Instagram Handle** - Akun Instagram resmi
+- **Google Maps Embed URL** - Link embed peta
+
+### Tab Carousel Images
+
+Mengatur gambar slideshow di landing page:
+
+1. Klik **Tambah Gambar**
+2. Masukkan URL gambar
+3. Isi Alt Text (deskripsi gambar)
+4. Klik **Simpan**
+
+### Menyimpan Perubahan
+
+Setiap tab memiliki tombol **Simpan** tersendiri. Pastikan klik tombol ini setelah melakukan perubahan agar data tersimpan.
+
+---
+
+# Logout
+
+## Keluar dari Sistem
+
+Untuk keluar dari sistem:
+
+1. Klik tombol **Logout** berwarna merah di bagian bawah sidebar
+2. Sistem akan menghapus sesi dan mengarahkan ke halaman login
+3. Data lokal akan dihapus untuk keamanan
+
+> **Tips Keamanan:** Selalu logout setelah selesai menggunakan sistem, terutama pada perangkat bersama.
+
+---
+
+# Troubleshooting
+
+## Masalah Umum dan Solusi
+
+### 1. Tidak Bisa Login
+
+**Kemungkinan Penyebab:**
+- Username atau password salah
+- Akun belum terdaftar
+
+**Solusi:**
+- Periksa kembali username dan password
+- Hubungi Manager untuk registrasi akun baru
+
+### 2. Kamera Tidak Berfungsi (Verifikasi Foto)
+
+**Kemungkinan Penyebab:**
+- Browser tidak memiliki izin akses kamera
+- Kamera sedang digunakan aplikasi lain
+
+**Solusi:**
+- Buka pengaturan browser dan izinkan akses kamera
+- Tutup aplikasi lain yang menggunakan kamera
+- Refresh halaman dan coba lagi
+
+### 3. Data Tidak Tersimpan
+
+**Kemungkinan Penyebab:**
+- Belum menekan tombol Simpan
+- Browser dalam mode private/incognito
+
+**Solusi:**
+- Pastikan menekan tombol Simpan setelah melakukan perubahan
+- Gunakan browser dalam mode normal (bukan incognito)
+
+### 4. Halaman Tidak Responsif
+
+**Solusi:**
+- Refresh halaman (tekan F5 atau Ctrl+R)
+- Bersihkan cache browser
+- Coba menggunakan browser lain (Chrome/Firefox/Edge)
+
+---
+
+# Kontak Bantuan
+
+Jika mengalami kendala yang tidak dapat diselesaikan, hubungi:
+
+- **WhatsApp Support:** 087814811610
+- **Instagram:** @kopiakuu
+
+---
+
+*Dokumen ini dibuat untuk membantu pengguna memahami dan mengoperasikan Dashboard KopiAku POS dengan optimal. Terakhir diperbarui: November 2025*
